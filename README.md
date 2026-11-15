@@ -1,5 +1,7 @@
 # LFTC Vizual
 
+**Live:** https://lftc-five.vercel.app/
+
 Interactive study aid for *Limbaje formale și tehnici de compilare* (RO/EN):
 
 - **ε-tranziții** — ε-closures and elimination of ε-transitions
