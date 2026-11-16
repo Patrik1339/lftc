@@ -41,6 +41,11 @@ export function App() {
     return () => window.removeEventListener('hashchange', on);
   }, []);
 
+  // On narrow screens the nav scrolls sideways; keep the current page's tab visible.
+  useEffect(() => {
+    document.querySelector('nav a.active')?.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+  }, [page]);
+
   const goTo = useCallback((p: PageId, text?: string) => {
     if (text !== undefined && p !== 'home' && p !== 'pump' && p !== 'bnf') setTexts((old) => ({ ...old, [p]: text }));
     window.location.hash = p;
@@ -52,8 +57,13 @@ export function App() {
     <>
       <header className="app-header">
         <div className="brand" onClick={() => goTo('home')}>
-          <b>{t('app.title')}</b>
-          <span className="muted small">{t('app.subtitle')}</span>
+          <span className="brand-mark" aria-hidden>
+            ε
+          </span>
+          <span className="brand-text">
+            <b>{t('app.title')}</b>
+            <span className="muted small">{t('app.subtitle')}</span>
+          </span>
         </div>
         <nav>
           {PAGES.map((p) => (
@@ -71,7 +81,7 @@ export function App() {
         </div>
       </header>
       <main>
-        {page !== 'home' && <h1>{t(`nav.${page}`)}</h1>}
+        {page !== 'home' && <h1 className="page-title">{t(`nav.${page}`)}</h1>}
         {page === 'home' && <HomePage goTo={goTo} />}
         {page === 'chomsky' && <ChomskyPage text={texts.chomsky} setText={setText('chomsky')} goTo={goTo} />}
         {page === 'bnf' && <BnfPage goTo={goTo} />}

@@ -20,8 +20,8 @@ function useDark(): boolean {
   return dark;
 }
 
-const LIGHT: DotPalette = { fg: '#1f2937', muted: '#b6bcc6', hl: '#2563eb', hlFill: '#dbeafe', hl2: '#d97706', hl2Fill: '#fef3c7' };
-const DARK: DotPalette = { fg: '#e5e7eb', muted: '#4b5563', hl: '#60a5fa', hlFill: '#1e3a5f', hl2: '#fbbf24', hl2Fill: '#4a3410' };
+const LIGHT: DotPalette = { fg: '#1f2340', muted: '#b6bacb', hl: '#4f46e5', hlFill: '#e0e7ff', hl2: '#d97706', hl2Fill: '#fef3c7' };
+const DARK: DotPalette = { fg: '#e6e8f2', muted: '#4a5068', hl: '#a5b4fc', hlFill: '#2a2f63', hl2: '#fbbf24', hl2Fill: '#4a3410' };
 
 export function AutomatonView({ automaton, highlight, title }: { automaton: Automaton; highlight?: Highlight; title?: Text }) {
   const makeDot = useCallback((pal: DotPalette) => toDot(automaton, highlight, pal), [automaton, highlight]);

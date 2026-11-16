@@ -14,6 +14,13 @@ export const ro: Dict = {
   'home.nfa': 'Transformă un automat nedeterminist într-unul determinist prin construcția submulțimilor.',
   'home.min': 'Elimină stările inaccesibile și unește stările echivalente pentru a obține AFD-ul minimal.',
   'home.pump': 'Demonstrează prin reducere la absurd că un limbaj nu este regulat, cu un p aleator.',
+  'home.badge': 'Ghid interactiv de studiu',
+  'home.groupGrammar': 'Gramatici',
+  'home.groupGrammarDesc': 'Clasificare, notații, forme normale și ambiguitatea gramaticilor independente de context.',
+  'home.groupAutomata': 'Automate finite și limbaje regulate',
+  'home.groupAutomataDesc': 'De la AFN-ε la AFD-ul minimal și demonstrația că un limbaj nu este regulat.',
+  'home.open': 'Deschide',
+  'home.topics': 'subiecte',
   'home.flow': 'Fluxul tipic: AFN-ε → (eliminare ε) → AFN → (submulțimi) → AFD → (minimizare) → AFD minimal. Fiecare pagină are un buton care trimite rezultatul la pasul următor.',
 
   'graph.original': 'Automatul inițial',

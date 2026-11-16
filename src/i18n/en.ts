@@ -12,6 +12,13 @@ export const en = {
   'home.nfa': 'Turn a nondeterministic automaton into a deterministic one with the subset construction.',
   'home.min': 'Remove inaccessible states and merge equivalent states to get the minimal DFA.',
   'home.pump': 'Prove that a language is not regular, by contradiction, with a random p.',
+  'home.badge': 'Interactive study aid',
+  'home.groupGrammar': 'Grammars',
+  'home.groupGrammarDesc': 'Classification, notations, normal forms and ambiguity of context-free grammars.',
+  'home.groupAutomata': 'Finite automata & regular languages',
+  'home.groupAutomataDesc': 'From NFA-ε to the minimal DFA, and proving that a language is not regular.',
+  'home.open': 'Open',
+  'home.topics': 'topics',
   'home.flow': 'Typical pipeline: NFA-ε → (remove ε) → NFA → (subsets) → DFA → (minimize) → minimal DFA. Each page has a button to send its result to the next step.',
 
   'graph.original': 'Initial automaton',
