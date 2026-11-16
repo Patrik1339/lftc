@@ -1,20 +1,23 @@
 import type { Example } from '../automata/examples';
-import type { ParseResult } from '../automata/parse';
+import type { ParseError } from '../automata/parse';
 import { Html, useI18n } from '../i18n';
 
 interface Props {
   value: string;
   onChange: (text: string) => void;
   examples: Example[];
-  parsed: ParseResult;
+  parsed: { ok: true } | { ok: false; errors: ParseError[] };
+  /** i18n keys, for editors of things other than automata (e.g. grammars). */
+  title?: string;
+  help?: string;
 }
 
-export function AutomatonEditor({ value, onChange, examples, parsed }: Props) {
+export function AutomatonEditor({ value, onChange, examples, parsed, title = 'editor.title', help = 'editor.help' }: Props) {
   const { t } = useI18n();
   return (
     <div className="editor card">
       <div className="editor-head">
-        <h3>{t('editor.title')}</h3>
+        <h3>{t(title)}</h3>
         <select
           value=""
           onChange={(e) => {
@@ -39,7 +42,7 @@ export function AutomatonEditor({ value, onChange, examples, parsed }: Props) {
           ))}
         </ul>
       )}
-      <Html as="p" className="muted small" html={t('editor.help')} />
+      <Html as="p" className="muted small" html={t(help)} />
     </div>
   );
 }

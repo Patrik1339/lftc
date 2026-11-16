@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import type { Step } from '../automata/types';
 import { Html, useI18n } from '../i18n';
 import { AutomatonView } from './AutomatonView';
+import { GrammarBox } from './GrammarView';
 import { Table } from './Table';
 
 export function Stepper({ steps }: { steps: Step[] }) {
@@ -40,9 +41,21 @@ export function Stepper({ steps }: { steps: Step[] }) {
 
   if (!steps.length) return null;
   const step = steps[idx];
+  // First step of each phase, for the jump links.
+  const phases = steps.flatMap((s, k) => (s.phase && (k === 0 || tx(steps[k - 1].phase) !== tx(s.phase)) ? [k] : []));
+  const phaseOf = (k: number) => phases.filter((p) => p <= k).pop();
 
   return (
     <section className="stepper">
+      {phases.length > 1 && (
+        <div className="phases">
+          {phases.map((p, n) => (
+            <button key={p} className={phaseOf(idx) === p ? 'active' : undefined} onClick={() => setI(p)}>
+              <Html html={`${n + 1}. ${tx(steps[p].phase)}`} />
+            </button>
+          ))}
+        </div>
+      )}
       <div className="stepper-bar">
         <button onClick={() => setI(0)} disabled={idx === 0} title={t('stepper.first')}>⏮</button>
         <button onClick={() => setI(idx - 1)} disabled={idx === 0}>◀ {t('stepper.prev')}</button>
@@ -66,11 +79,20 @@ export function Stepper({ steps }: { steps: Step[] }) {
         <Html as="div" className="step-title" html={tx(step.title)} />
         <Html as="p" html={tx(step.body)} />
       </div>
-      <div className={`graphs graphs-${step.graphs.length}`}>
-        {step.graphs.map((g, k) => (
-          <AutomatonView key={k} automaton={g.automaton} highlight={g.highlight} title={g.title} />
-        ))}
-      </div>
+      {step.graphs && (
+        <div className={`graphs graphs-${step.graphs.length}`}>
+          {step.graphs.map((g, k) => (
+            <AutomatonView key={k} automaton={g.automaton} highlight={g.highlight} title={g.title} />
+          ))}
+        </div>
+      )}
+      {step.grammars && (
+        <div className={`graphs graphs-${step.grammars.length}`}>
+          {step.grammars.map((g, k) => (
+            <GrammarBox key={k} view={g} />
+          ))}
+        </div>
+      )}
       {step.tables?.map((tb, k) => <Table key={k} table={tb} />)}
       <div className="muted small">{t('stepper.keys')}</div>
     </section>

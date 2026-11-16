@@ -207,6 +207,199 @@ export const en = {
 <li><b>You</b> pick i ≥ 0 such that xy<sup>i</sup>z ∉ L. Contradiction ⇒ L is not regular.</li>
 </ol>
 <p>Note: the lemma is a necessary condition only. It can show a language is <i>not</i> regular, never that it is.</p>`,
+  // grammars (shared)
+  'nav.cfg': 'CNF & GNF',
+  'nav.lr': 'Left recursion',
+  'home.cfg': 'Bring any context-free grammar to Chomsky and then Greibach normal form: ε-productions, renames, useless symbols, CNF, GNF.',
+  'home.lr': 'Detect direct and indirect left recursion and remove it with the classic substitution algorithm.',
+  'home.flowCfg': 'For grammars: grammar → (ε, renames, unproductive, inaccessible) → reduced grammar → CNF → GNF.',
+  'gparse.noArrow': 'a production is written as: A -> α | β',
+  'gparse.badLhs': '"{name}" is not a nonterminal (nonterminals start with an uppercase letter)',
+  'gparse.empty': 'the grammar has no productions',
+  'gparse.badStart': 'the start symbol "{name}" has no productions',
+  'geditor.title': 'Grammar',
+  'geditor.help': 'One line per nonterminal: <code>S -> aSb | AB | ε</code>. Nonterminals are uppercase letters, optionally indexed (<code>A1</code>, <code>X_a</code>, <code>S\'</code>); every other character is a terminal. Use <code>ε</code>, <code>eps</code> or <code>λ</code> for the empty word. The first line gives the start symbol.',
+  'gview.original': 'Initial grammar',
+  'gview.building': 'Grammar under construction',
+  'gview.before': 'Before',
+  'gview.after': 'After',
+  'gview.cnf': 'Chomsky normal form (CNF)',
+  'gview.gnf': 'Greibach normal form (GNF)',
+  'col.prod': 'Production',
+  'col.newProds': 'New productions',
+  'col.copied': 'Copied productions',
+  'col.terminal': 'Terminal',
+  'col.newNt': 'New nonterminal',
+  'col.replacedBy': 'Replaced by',
+  'gtester.placeholder': 'e.g. aabb (empty = ε)',
+  'gtester.yes': 'generated',
+  'gtester.no': 'not generated',
+  'gtester.sample': 'Words of length ≤ {n} (initial grammar)',
+  'gtester.same': 'all grammars generate exactly these words',
+  'gtester.differ': 'the grammars generate different short words',
+  'ex.cfg.full': 'Complete example (every step does something)',
+  'ex.cfg.anbn': 'aⁿbⁿ (S → aSb | ε)',
+  'ex.cfg.paren': 'Balanced parentheses',
+  'ex.cfg.expr': 'Arithmetic expressions',
+  'ex.cfg.cnfIndirect': 'Already in CNF, indirect left recursion',
+  'ex.lr.expr': 'Expressions E, T, F (direct)',
+  'ex.lr.indirect': 'Indirect: S → Aa, A → Sd',
+  'ex.lr.multi': 'Several recursive alternatives',
+  'ex.lr.cycle3': 'Indirect through 3 nonterminals',
+  'ex.lr.epsilon': 'With ε-productions (needs cleaning)',
+
+  // CNF & GNF
+  'cfg.emptyLang': 'The start symbol is unproductive, so <b>L(G) = ∅</b>: there is nothing to bring to normal form.',
+  'cfg.tooLarge': 'The Greibach form of this grammar has more than {n} productions, so we stop after CNF. (GNF can be exponentially larger.)',
+  'cfg.goto.lr': 'Remove left recursion from the reduced grammar →',
+  'cfg.ph.eps': 'ε-productions',
+  'cfg.ph.unit': 'Renames',
+  'cfg.ph.prod': 'Unproductive',
+  'cfg.ph.acc': 'Inaccessible',
+  'cfg.ph.cnf': 'CNF',
+  'cfg.ph.gnf': 'GNF',
+  'cfg.tbl.nullable': 'Nullable nonterminals (A ⇒* ε)',
+  'cfg.tbl.unit': 'Renaming sets',
+  'cfg.tbl.productive': 'Productive nonterminals',
+  'cfg.tbl.accessible': 'Accessible symbols',
+  'cfg.tbl.order': 'Order of the nonterminals',
+
+  'cfg.eps.none.t': '1. ε-productions',
+  'cfg.eps.none.b': 'The grammar has no ε-productions. Nothing to do in this step.',
+  'cfg.eps.onlyStart.b': 'The only ε-production is {S} → ε and {S} does not appear on any right-hand side, which is allowed. Nothing to do in this step.',
+  'cfg.eps.null.t': '1. Nullable nonterminals: N{i}',
+  'cfg.eps.null0.b': 'We first find the nonterminals that derive ε. We start with those having an ε-production (struck through — they will disappear): N<sub>0</sub> = {A | A → ε} = {N}.',
+  'cfg.eps.nullI.b': 'N<sub>{i}</sub> = N<sub>{i1}</sub> ∪ {A | A → α, α ∈ N<sub>{i1}</sub>*}: a nonterminal is nullable if some right-hand side consists only of nullable nonterminals. N<sub>{i}</sub> = {N}.',
+  'cfg.eps.stable.t': '1. The set of nullable nonterminals',
+  'cfg.eps.stable.b': 'N<sub>{k1}</sub> = N<sub>{k}</sub>, so the iteration stops. Nullable nonterminals: N<sub>ε</sub> = {N}.',
+  'cfg.eps.prod.t': '1. New productions for {A}',
+  'cfg.eps.prod.b': 'For every production of {A} we add all the variants obtained by <b>deleting any subset of the occurrences</b> of nullable symbols {N} (but never the empty variant). ε-productions are dropped.',
+  'cfg.eps.start.t': '1. Is ε in the language?',
+  'cfg.eps.start.new': 'The start symbol {S} is nullable, so ε ∈ L(G) and we must keep it. Since {S} appears on right-hand sides, we add a new start symbol {S1} → {S} | ε ({S1} never appears on a right-hand side).',
+  'cfg.eps.start.keep': 'The start symbol {S} is nullable, so ε ∈ L(G). {S} does not appear on any right-hand side, so we simply keep {S} → ε.',
+  'cfg.eps.done.t': '1. Without ε-productions',
+  'cfg.eps.done.b': 'The new grammar has no ε-productions (except possibly S → ε, with S not on a right-hand side) and generates the same language.',
+
+  'cfg.unit.none.t': '2. Renames',
+  'cfg.unit.none.b': 'There is no rename (production of the form A → B). Nothing to do in this step.',
+  'cfg.unit.sets.t': '2. Renaming sets N<sub>A</sub>',
+  'cfg.unit.sets.b': 'A <b>rename</b> is a production A → B with B a nonterminal (struck through). For every A we compute N<sub>A</sub> = {B | A ⇒* B using renames only}: start with {A} and keep adding C whenever B → C with B already in the set.',
+  'cfg.unit.prod.t': '2. Productions of {A}',
+  'cfg.unit.prod.b': 'N<sub>A</sub> = {NA}. {A} keeps its own non-rename productions and receives every non-rename production of each B ∈ N<sub>A</sub>: A → α whenever B → α is not a rename.',
+  'cfg.unit.done.t': '2. Without renames',
+  'cfg.unit.done.b': 'All renames have been replaced by the productions they lead to.',
+
+  'cfg.prod.iter.t': '3. Productive nonterminals: N{i}',
+  'cfg.prod.iter1.b': 'A nonterminal is <b>productive</b> if it derives a word of terminals. N<sub>0</sub> = ∅ and N<sub>1</sub> = {A | A → x, x ∈ Σ*} = {N}.',
+  'cfg.prod.iterI.b': 'N<sub>{i}</sub> = {A | A → α, α ∈ (N<sub>{i1}</sub> ∪ Σ)*}: right-hand sides with only terminals and already productive nonterminals. N<sub>{i}</sub> = {N}.',
+  'cfg.prod.none.t': '3. All nonterminals are productive',
+  'cfg.prod.none.b': 'The iteration is stable and N = {N} contains every nonterminal. Nothing to remove.',
+  'cfg.prod.remove.t': '3. Remove unproductive symbols',
+  'cfg.prod.remove.b': 'The iteration is stable: N = {N}. The unproductive nonterminals {bad} never finish a derivation, so we remove them together with <b>every production that contains them</b>.',
+  'cfg.prod.empty.t': '3. The language is empty',
+  'cfg.prod.empty.b': 'The start symbol {S} is not productive (N = {N}), so L(G) = ∅. The algorithm stops.',
+
+  'cfg.acc.iter.t': '4. Accessible symbols: V{i}',
+  'cfg.acc.iter0.b': 'A symbol is <b>accessible</b> if it appears in some sentential form derived from {S}. We start with V<sub>0</sub> = {V}.',
+  'cfg.acc.iterI.b': 'V<sub>{i}</sub> = V<sub>{i1}</sub> ∪ {X | A → αXβ, A ∈ V<sub>{i1}</sub>}: we add every symbol from the right-hand sides of accessible nonterminals. V<sub>{i}</sub> = {V}.',
+  'cfg.acc.none.t': '4. All symbols are accessible',
+  'cfg.acc.none.b': 'The iteration is stable and every symbol is accessible. Nothing to remove. The grammar is now <b>reduced</b> (proper).',
+  'cfg.acc.remove.t': '4. Remove inaccessible symbols',
+  'cfg.acc.remove.b': 'V = {V}. The symbols {bad} are never reached from the start symbol, so we remove them and their productions. The grammar is now <b>reduced</b> (proper).',
+
+  'cfg.cnf.intro.t': '5. Towards Chomsky normal form',
+  'cfg.cnf.intro.b': 'In CNF every production is A → BC or A → a (plus S → ε when needed). The marked productions do not have this shape: they contain terminals next to other symbols, or have more than two symbols.',
+  'cfg.cnf.intro.ok': 'Every production already has the form A → BC or A → a (plus possibly S → ε). The grammar is already in CNF.',
+  'cfg.cnf.term.t': '5a. Terminals in long productions',
+  'cfg.cnf.term.b': 'In every right-hand side of length ≥ 2 we replace each terminal a by a new nonterminal X<sub>a</sub> and add X<sub>a</sub> → a.',
+  'cfg.cnf.long.t': '5b. Break up long productions of {A}',
+  'cfg.cnf.long.b': 'A production A → B<sub>1</sub>B<sub>2</sub>…B<sub>k</sub> with k ≥ 3 becomes the chain A → B<sub>1</sub>Y<sub>1</sub>, Y<sub>1</sub> → B<sub>2</sub>Y<sub>2</sub>, …, Y<sub>k-2</sub> → B<sub>k-1</sub>B<sub>k</sub>, with new nonterminals Y (identical tails reuse the same Y).',
+  'cfg.cnf.done.t': '5. The grammar in CNF',
+  'cfg.cnf.done.b': 'All productions now have the form A → BC or A → a (and possibly S → ε).',
+
+  'cfg.gnf.intro.t': '6. Towards Greibach normal form',
+  'cfg.gnf.intro.b': 'In GNF every production is A → aα with a ∈ Σ and α ∈ N*. We start from the CNF and number its {n} nonterminals A<sub>1</sub>, …, A<sub>n</sub>. Goal of the first pass: every production A<sub>i</sub> → A<sub>j</sub>γ has j &gt; i.',
+  'cfg.gnf.intro.eps': 'In GNF every production is A → aα with a ∈ Σ and α ∈ N*. We set {S} → ε aside (we add it back at the end) and number the {n} nonterminals A<sub>1</sub>, …, A<sub>n</sub>. Goal of the first pass: every production A<sub>i</sub> → A<sub>j</sub>γ has j &gt; i.',
+  'cfg.gnf.sub.t': '6. Substitute {Aj} in the productions of {Ai}',
+  'cfg.gnf.sub.b': '{Ai} (i = {i}) has productions starting with {Aj} (j = {j} &lt; i). We replace each {Ai} → {Aj}γ by {Ai} → δγ for every production {Aj} → δ.',
+  'cfg.gnf.lr.t': '6. Left recursion of {A}',
+  'cfg.gnf.lr.b': '{A} is now directly left recursive: {A} → {A}α with α ∈ {alphas}; the other productions are β ∈ {betas}. With the new nonterminal {Z}: {A} → β | β{Z} and {Z} → α | α{Z} (variant without ε).',
+  'cfg.gnf.back.t': '6. Back substitution',
+  'cfg.gnf.back.b': 'Now every A<sub>i</sub> → A<sub>j</sub>γ has j &gt; i, so the last nonterminal {An} only has productions that start with a terminal. Going backwards (A<sub>n-1</sub>, …, A<sub>1</sub>, then the Z\'s), we substitute leading nonterminals that already start with terminals. Marked productions still start with a nonterminal.',
+  'cfg.gnf.backsub.t': '6. Substitute in {A}',
+  'cfg.gnf.backsub.b': 'Productions of {A} start with {B}, whose productions all start with a terminal by now. After substitution every production of {A} starts with a terminal.',
+  'cfg.gnf.backsubZ.b': 'The productions of the new nonterminal {A} start with {B}; those already start with terminals, so we substitute them.',
+  'cfg.gnf.unused.t': 'Remove inaccessible nonterminals',
+  'cfg.gnf.unused.b': 'After substitution, {bad} no longer appear on any right-hand side reachable from the start symbol, so we remove them.',
+  'cfg.gnf.done.t': '6. The grammar in GNF',
+  'cfg.gnf.done.b': 'Every production has the form A → aα (a terminal followed by nonterminals). {n} productions in total.',
+  'cfg.gnf.done.eps': 'Every production has the form A → aα, plus {S} → ε which we added back. {n} productions in total.',
+
+  // left recursion
+  'lr.variant': 'Form of the new productions',
+  'lr.variant.eps': "with ε: A → βA', A' → αA' | ε (LL parsers)",
+  'lr.variant.noeps': "without ε: A → β | βA', A' → α | αA' (for GNF)",
+  'lr.needClean.eps': 'The algorithm needs a grammar <b>without ε-productions</b> (they can hide left recursion, e.g. A → BAα with B ⇒ ε).',
+  'lr.needClean.cycle': 'The algorithm needs a grammar <b>without cycles</b> A ⇒⁺ A (made of renames).',
+  'lr.clean': 'Remove ε-productions and renames first',
+  'lr.result': 'Without left recursion',
+  'lr.tbl.detect': 'Left recursion',
+  'lr.col.corners': 'A ⇒⁺ B… for B in',
+  'lr.col.direct': 'direct',
+  'lr.col.indirect': 'indirect',
+  'lr.s.detect.t': 'Detect left recursion',
+  'lr.s.detect.b': 'A is <b>left recursive</b> if A ⇒⁺ Aα. For each nonterminal we list the nonterminals that can appear first in a sentential form derived from it. Left recursive: {list}. We number the nonterminals A<sub>1</sub>, …, A<sub>n</sub> in the order shown.',
+  'lr.s.detect.none': 'No nonterminal can derive a sentential form that starts with itself, so the grammar has no left recursion. Nothing to do.',
+  'lr.s.sub.t': 'i = {i}: substitute {Aj} in {Ai}',
+  'lr.s.sub.b': '{Ai} has productions {Ai} → {Aj}γ with j = {j} &lt; i = {i}. We replace them by {Ai} → δγ for every {Aj} → δ. Since {Aj} was processed earlier, this can only produce productions starting with a terminal, A<sub>k</sub> with k &gt; j, or {Ai} itself (direct recursion).',
+  'lr.s.direct.t': 'i = {i}: direct left recursion of {A}',
+  'lr.s.noDirect.b': '{A} has no production of the form {A} → {A}α, so it stays as it is.',
+  'lr.s.direct.eps': 'Split the productions: {A} → {A}α with α ∈ {alphas}, and {A} → β with β ∈ {betas}. Since {A} ⇒* βα…α, we generate the same words from right to left: {A} → β{Z} and {Z} → α{Z} | ε.',
+  'lr.s.direct.noeps': 'Split the productions: {A} → {A}α with α ∈ {alphas}, and {A} → β with β ∈ {betas}. Since {A} ⇒* βα…α, we generate the same words from right to left: {A} → β | β{Z} and {Z} → α | α{Z}.',
+  'lr.s.done.t': 'Done',
+  'lr.s.done.b': 'The grammar on the right has no left recursion (direct or indirect) and generates the same language.',
+
+  'theory.cfg': `
+<p>A context-free grammar G = (N, Σ, P, S) is brought to a normal form in a fixed order. Each step preserves L(G).</p>
+<h4>1. ε-productions</h4>
+<p class="formula">N<sub>0</sub> = {A | A → ε},   N<sub>i+1</sub> = N<sub>i</sub> ∪ {A | A → α, α ∈ N<sub>i</sub>*}</p>
+<p>Every production A → α is replaced by all the variants obtained by deleting some occurrences of nullable symbols (except ε). If S is nullable, ε ∈ L(G): we keep S → ε, using a new start S' → S | ε when S appears on a right-hand side.</p>
+<div class="example">S → aSb | ε   ⇒   S' → S | ε,  S → aSb | ab</div>
+<h4>2. Renames (A → B)</h4>
+<p class="formula">N<sub>A</sub> = {B ∈ N | A ⇒* B} ;   A → α for every B ∈ N<sub>A</sub>, B → α not a rename</p>
+<div class="example">S → A | a,  A → bA | c   ⇒   S → a | bA | c,  A → bA | c</div>
+<h4>3. Unproductive symbols</h4>
+<p class="formula">N<sub>0</sub> = ∅,   N<sub>i+1</sub> = {A | A → α, α ∈ (N<sub>i</sub> ∪ Σ)*}</p>
+<p>Nonterminals outside N are removed, with every production containing them. If S ∉ N, then L(G) = ∅.</p>
+<h4>4. Inaccessible symbols</h4>
+<p class="formula">V<sub>0</sub> = {S},   V<sub>i+1</sub> = V<sub>i</sub> ∪ {X | A → αXβ, A ∈ V<sub>i</sub>}</p>
+<p>The order 3 → 4 matters: removing unproductive symbols can make others inaccessible, not the other way round.</p>
+<div class="example">S → a | AB,  A → a   (B unproductive) ⇒ S → a,  A → a ⇒ (A inaccessible) S → a</div>
+<h4>5. Chomsky normal form (CNF)</h4>
+<p>Productions <span class="formula">A → BC</span> or <span class="formula">A → a</span> (and S → ε if ε ∈ L, S not on a right-hand side). Starting from the reduced grammar:</p>
+<ol><li>in right-hand sides of length ≥ 2, replace each terminal a by X<sub>a</sub> and add X<sub>a</sub> → a;</li>
+<li>replace A → B<sub>1</sub>…B<sub>k</sub> (k ≥ 3) by A → B<sub>1</sub>Y<sub>1</sub>, Y<sub>1</sub> → B<sub>2</sub>Y<sub>2</sub>, …, Y<sub>k-2</sub> → B<sub>k-1</sub>B<sub>k</sub>.</li></ol>
+<div class="example">S → aSb | ab   ⇒   S → X<sub>a</sub>Y<sub>1</sub> | X<sub>a</sub>X<sub>b</sub>,  Y<sub>1</sub> → SX<sub>b</sub>,  X<sub>a</sub> → a,  X<sub>b</sub> → b</div>
+<h4>6. Greibach normal form (GNF)</h4>
+<p>Productions <span class="formula">A → aα</span>, a ∈ Σ, α ∈ N* (and S → ε). Starting from CNF, with nonterminals ordered A<sub>1</sub>, …, A<sub>n</sub>:</p>
+<ol><li>for i = 1..n: for j &lt; i, substitute A<sub>j</sub> in every A<sub>i</sub> → A<sub>j</sub>γ; then remove the direct left recursion of A<sub>i</sub> with a new Z<sub>i</sub> (A<sub>i</sub> → β | βZ<sub>i</sub>, Z<sub>i</sub> → α | αZ<sub>i</sub>);</li>
+<li>now A<sub>i</sub> → A<sub>j</sub>γ implies j &gt; i, so A<sub>n</sub> starts with terminals; substitute backwards in A<sub>n-1</sub>, …, A<sub>1</sub>;</li>
+<li>finally substitute in the Z productions (they start with some A<sub>k</sub>).</li></ol>
+<div class="example">A<sub>1</sub> → A<sub>2</sub>A<sub>2</sub> | a,  A<sub>2</sub> → A<sub>1</sub>A<sub>2</sub> | b<br>A<sub>2</sub> → A<sub>2</sub>A<sub>2</sub>A<sub>2</sub> | aA<sub>2</sub> | b   ⇒   A<sub>2</sub> → aA<sub>2</sub> | b | aA<sub>2</sub>Z | bZ,  Z → A<sub>2</sub>A<sub>2</sub> | A<sub>2</sub>A<sub>2</sub>Z<br>then A<sub>1</sub> and Z get A<sub>2</sub>'s productions substituted in front.</div>`,
+  'theory.lr': `
+<p>A grammar is <b>left recursive</b> if some nonterminal A has a derivation A ⇒⁺ Aα. It is <b>directly</b> left recursive if A → Aα is a production, and <b>indirectly</b> otherwise (e.g. S → Aa, A → Sd).</p>
+<p>Why remove it: a top-down (recursive-descent / LL) parser expanding A would call A again without consuming input — an infinite loop. It is also a step of the Greibach normal form.</p>
+<h4>Direct left recursion</h4>
+<p>Group the productions of A: <span class="formula">A → Aα<sub>1</sub> | … | Aα<sub>m</sub> | β<sub>1</sub> | … | β<sub>n</sub></span> (no β starts with A). A generates β<sub>j</sub> followed by any sequence of α's, so we generate it left-to-right with a new nonterminal A':</p>
+<ul><li class="formula">with ε:  A → β<sub>1</sub>A' | … | β<sub>n</sub>A',   A' → α<sub>1</sub>A' | … | α<sub>m</sub>A' | ε</li>
+<li class="formula">without ε:  A → β<sub>j</sub> | β<sub>j</sub>A',   A' → α<sub>i</sub> | α<sub>i</sub>A'</li></ul>
+<div class="example">E → E+T | T   ⇒   E → TE',  E' → +TE' | ε   (or  E → T | TE',  E' → +T | +TE')</div>
+<div class="example">A → Aa | Ab | c | d   ⇒   A → cA' | dA',  A' → aA' | bA' | ε</div>
+<h4>Indirect left recursion (general algorithm)</h4>
+<p>Condition: no ε-productions and no cycles A ⇒⁺ A. Order the nonterminals A<sub>1</sub>, …, A<sub>n</sub>.</p>
+<p class="formula">for i = 1..n:<br>&emsp;for j = 1..i−1: replace each A<sub>i</sub> → A<sub>j</sub>γ by A<sub>i</sub> → δγ for all A<sub>j</sub> → δ<br>&emsp;remove the direct left recursion of A<sub>i</sub></p>
+<p>Invariant: after step i, every A<sub>i</sub> → A<sub>k</sub>γ has k &gt; i, so no cycle of "first symbols" can remain.</p>
+<div class="example">S → Aa | b,  A → Ac | Sd | c<br>i = 2, j = 1:  A → Ac | Aad | bd | c<br>direct:  A → bdA' | cA',  A' → cA' | adA' | ε</div>`,
 };
 
 export type Dict = typeof en;

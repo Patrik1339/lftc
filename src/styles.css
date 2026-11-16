@@ -192,3 +192,24 @@ tr.hl td { background: var(--hl-row); font-weight: 600; }
 .pump-section h2 { margin: 0 0 12px; font-size: 1.3rem; }
 .proof.general li { margin: 10px 0; line-height: 1.7; }
 .proof-label { color: var(--accent); }
+
+.stack { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+.phases { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+.phases button { font-size: 0.85rem; padding: 4px 10px; }
+
+.gram .gram-lines { font-family: 'Cambria Math', Georgia, serif; font-size: 1.08rem; padding: 4px 8px; overflow-x: auto; }
+.gram-line { padding: 2px 6px; border-radius: 6px; white-space: nowrap; }
+.gram-line.hl { background: var(--accent-soft); }
+.gram-line.dim { opacity: 0.4; }
+.gram-arrow { margin: 0 8px; color: var(--muted); }
+.gram-bar { color: var(--muted); }
+.gram-lhs, .nt { font-weight: 600; }
+.p-add { background: var(--z); color: var(--letter-fg); border-radius: 4px; padding: 0 3px; }
+.p-del { text-decoration: line-through; text-decoration-color: var(--bad); text-decoration-thickness: 2px; opacity: 0.6; }
+.p-mark { background: var(--y); color: var(--letter-fg); border-radius: 4px; padding: 0 3px; }
+.p-add .nt, .p-mark .nt { color: inherit; }
+.step-text .nt, td .nt, .theory .nt { font-family: 'Cambria Math', Georgia, serif; }
+.sample-title { margin-top: 16px; }
+.sample { word-break: break-word; margin: 4px 0; }
+.theory .example { background: var(--bg); border-radius: 8px; padding: 8px 12px; margin: 6px 0; font-family: 'Cambria Math', Georgia, serif; }
+.theory h4 { margin: 14px 0 4px; }

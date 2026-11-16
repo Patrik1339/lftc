@@ -12,7 +12,7 @@ interface I18n {
   lang: Lang;
   setLang: (l: Lang) => void;
   /** Translate a key; params are HTML-escaped. The result may contain HTML from the dictionary. */
-  t: (key: Key | string, params?: Record<string, string | number>) => string;
+  t: (key: Key | string, params?: Record<string, string | number>, raw?: Record<string, string>) => string;
   /** Translate a Text (literal string or {key, params}). Literal strings are escaped. */
   tx: (text: Text | undefined) => string;
 }
@@ -43,14 +43,16 @@ export function I18nProvider({ children }: { children: ReactNode }) {
     }
   }, []);
   const t = useCallback(
-    (key: string, params?: Record<string, string | number>) => {
+    (key: string, params?: Record<string, string | number>, raw?: Record<string, string>) => {
       const template: string = (dicts[lang] as Record<string, string>)[key] ?? key;
-      return template.replace(/\{(\w+)\}/g, (m, name) => (params && name in params ? escape(String(params[name])) : m));
+      return template.replace(/\{(\w+)\}/g, (m, name) =>
+        raw && name in raw ? raw[name] : params && name in params ? escape(String(params[name])) : m,
+      );
     },
     [lang],
   );
   const tx = useCallback(
-    (text: Text | undefined) => (text === undefined ? '' : typeof text === 'string' ? escape(text) : t(text.key, text.params)),
+    (text: Text | undefined) => (text === undefined ? '' : typeof text === 'string' ? escape(text) : t(text.key, text.params, text.raw)),
     [t],
   );
   return <Ctx.Provider value={{ lang, setLang, t, tx }}>{children}</Ctx.Provider>;

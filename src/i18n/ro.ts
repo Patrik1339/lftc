@@ -205,4 +205,197 @@ export const ro: Dict = {
 <li><b>Tu</b> alegi i ≥ 0 astfel încât xy<sup>i</sup>z ∉ L. Contradicție ⇒ L nu este regulat.</li>
 </ol>
 <p>Atenție: lema este doar o condiție necesară. Poate arăta că un limbaj <i>nu</i> este regulat, niciodată că este.</p>`,
+  // gramatici (comun)
+  'nav.cfg': 'FNC & FNG',
+  'nav.lr': 'Recursivitate stângă',
+  'home.cfg': 'Adu orice gramatică independentă de context la forma normală Chomsky și apoi Greibach: ε-producții, redenumiri, simboluri inutile, FNC, FNG.',
+  'home.lr': 'Detectează recursivitatea stângă directă și indirectă și elimin-o cu algoritmul clasic de substituție.',
+  'home.flowCfg': 'Pentru gramatici: gramatică → (ε, redenumiri, neproductive, inaccesibile) → gramatică redusă → FNC → FNG.',
+  'gparse.noArrow': 'o producție se scrie: A -> α | β',
+  'gparse.badLhs': '„{name}” nu este neterminal (neterminalele încep cu literă mare)',
+  'gparse.empty': 'gramatica nu are producții',
+  'gparse.badStart': 'simbolul de start „{name}” nu are producții',
+  'geditor.title': 'Gramatică',
+  'geditor.help': 'Câte o linie pe neterminal: <code>S -> aSb | AB | ε</code>. Neterminalele sunt litere mari, eventual cu indice (<code>A1</code>, <code>X_a</code>, <code>S\'</code>); orice alt caracter este terminal. Folosește <code>ε</code>, <code>eps</code> sau <code>λ</code> pentru cuvântul vid. Prima linie dă simbolul de start.',
+  'gview.original': 'Gramatica inițială',
+  'gview.building': 'Gramatica în construcție',
+  'gview.before': 'Înainte',
+  'gview.after': 'După',
+  'gview.cnf': 'Forma normală Chomsky (FNC)',
+  'gview.gnf': 'Forma normală Greibach (FNG)',
+  'col.prod': 'Producție',
+  'col.newProds': 'Producții noi',
+  'col.copied': 'Producții copiate',
+  'col.terminal': 'Terminal',
+  'col.newNt': 'Neterminal nou',
+  'col.replacedBy': 'Înlocuită cu',
+  'gtester.placeholder': 'ex. aabb (gol = ε)',
+  'gtester.yes': 'generat',
+  'gtester.no': 'negenerat',
+  'gtester.sample': 'Cuvintele de lungime ≤ {n} (gramatica inițială)',
+  'gtester.same': 'toate gramaticile generează exact aceste cuvinte',
+  'gtester.differ': 'gramaticile generează cuvinte scurte diferite',
+  'ex.cfg.full': 'Exemplu complet (fiecare pas are ce face)',
+  'ex.cfg.anbn': 'aⁿbⁿ (S → aSb | ε)',
+  'ex.cfg.paren': 'Paranteze echilibrate',
+  'ex.cfg.expr': 'Expresii aritmetice',
+  'ex.cfg.cnfIndirect': 'Deja în FNC, recursivitate stângă indirectă',
+  'ex.lr.expr': 'Expresii E, T, F (directă)',
+  'ex.lr.indirect': 'Indirectă: S → Aa, A → Sd',
+  'ex.lr.multi': 'Mai multe alternative recursive',
+  'ex.lr.cycle3': 'Indirectă prin 3 neterminale',
+  'ex.lr.epsilon': 'Cu ε-producții (necesită curățare)',
+
+  // FNC & FNG
+  'cfg.emptyLang': 'Simbolul de start este neproductiv, deci <b>L(G) = ∅</b>: nu avem ce aduce la formă normală.',
+  'cfg.tooLarge': 'Forma Greibach a acestei gramatici are peste {n} producții, așa că ne oprim după FNC. (FNG poate fi exponențial mai mare.)',
+  'cfg.goto.lr': 'Elimină recursivitatea stângă din gramatica redusă →',
+  'cfg.ph.eps': 'ε-producții',
+  'cfg.ph.unit': 'Redenumiri',
+  'cfg.ph.prod': 'Neproductive',
+  'cfg.ph.acc': 'Inaccesibile',
+  'cfg.ph.cnf': 'FNC',
+  'cfg.ph.gnf': 'FNG',
+  'cfg.tbl.nullable': 'Neterminale anulabile (A ⇒* ε)',
+  'cfg.tbl.unit': 'Mulțimile de redenumire',
+  'cfg.tbl.productive': 'Neterminale productive',
+  'cfg.tbl.accessible': 'Simboluri accesibile',
+  'cfg.tbl.order': 'Ordinea neterminalelor',
+
+  'cfg.eps.none.t': '1. ε-producții',
+  'cfg.eps.none.b': 'Gramatica nu are ε-producții. Nu avem nimic de făcut la acest pas.',
+  'cfg.eps.onlyStart.b': 'Singura ε-producție este {S} → ε, iar {S} nu apare în nicio parte dreaptă, ceea ce este permis. Nu avem nimic de făcut la acest pas.',
+  'cfg.eps.null.t': '1. Neterminale anulabile: N{i}',
+  'cfg.eps.null0.b': 'Căutăm întâi neterminalele care derivă ε. Pornim de la cele cu ε-producție (tăiate — vor dispărea): N<sub>0</sub> = {A | A → ε} = {N}.',
+  'cfg.eps.nullI.b': 'N<sub>{i}</sub> = N<sub>{i1}</sub> ∪ {A | A → α, α ∈ N<sub>{i1}</sub>*}: un neterminal este anulabil dacă are o parte dreaptă formată doar din neterminale anulabile. N<sub>{i}</sub> = {N}.',
+  'cfg.eps.stable.t': '1. Mulțimea neterminalelor anulabile',
+  'cfg.eps.stable.b': 'N<sub>{k1}</sub> = N<sub>{k}</sub>, deci iterația se oprește. Neterminale anulabile: N<sub>ε</sub> = {N}.',
+  'cfg.eps.prod.t': '1. Producții noi pentru {A}',
+  'cfg.eps.prod.b': 'Pentru fiecare producție a lui {A} adăugăm toate variantele obținute prin <b>ștergerea oricărei submulțimi de apariții</b> ale simbolurilor anulabile {N} (dar niciodată varianta vidă). ε-producțiile dispar.',
+  'cfg.eps.start.t': '1. Este ε în limbaj?',
+  'cfg.eps.start.new': 'Simbolul de start {S} este anulabil, deci ε ∈ L(G) și trebuie păstrat. Cum {S} apare în părți drepte, adăugăm un nou simbol de start {S1} → {S} | ε ({S1} nu apare în nicio parte dreaptă).',
+  'cfg.eps.start.keep': 'Simbolul de start {S} este anulabil, deci ε ∈ L(G). {S} nu apare în nicio parte dreaptă, așa că păstrăm pur și simplu {S} → ε.',
+  'cfg.eps.done.t': '1. Fără ε-producții',
+  'cfg.eps.done.b': 'Noua gramatică nu are ε-producții (cu excepția eventuală a S → ε, cu S absent din părțile drepte) și generează același limbaj.',
+
+  'cfg.unit.none.t': '2. Redenumiri',
+  'cfg.unit.none.b': 'Nu există redenumiri (producții de forma A → B). Nu avem nimic de făcut la acest pas.',
+  'cfg.unit.sets.t': '2. Mulțimile de redenumire N<sub>A</sub>',
+  'cfg.unit.sets.b': 'O <b>redenumire</b> este o producție A → B cu B neterminal (tăiate). Pentru fiecare A calculăm N<sub>A</sub> = {B | A ⇒* B folosind doar redenumiri}: pornim de la {A} și adăugăm C ori de câte ori B → C cu B deja în mulțime.',
+  'cfg.unit.prod.t': '2. Producțiile lui {A}',
+  'cfg.unit.prod.b': 'N<sub>A</sub> = {NA}. {A} își păstrează producțiile care nu sunt redenumiri și primește toate producțiile (ne-redenumiri) ale fiecărui B ∈ N<sub>A</sub>: A → α ori de câte ori B → α nu este redenumire.',
+  'cfg.unit.done.t': '2. Fără redenumiri',
+  'cfg.unit.done.b': 'Toate redenumirile au fost înlocuite cu producțiile la care duc.',
+
+  'cfg.prod.iter.t': '3. Neterminale productive: N{i}',
+  'cfg.prod.iter1.b': 'Un neterminal este <b>productiv</b> dacă derivă un cuvânt format doar din terminale. N<sub>0</sub> = ∅ și N<sub>1</sub> = {A | A → x, x ∈ Σ*} = {N}.',
+  'cfg.prod.iterI.b': 'N<sub>{i}</sub> = {A | A → α, α ∈ (N<sub>{i1}</sub> ∪ Σ)*}: părți drepte doar cu terminale și neterminale deja productive. N<sub>{i}</sub> = {N}.',
+  'cfg.prod.none.t': '3. Toate neterminalele sunt productive',
+  'cfg.prod.none.b': 'Iterația este stabilă, iar N = {N} conține toate neterminalele. Nu eliminăm nimic.',
+  'cfg.prod.remove.t': '3. Eliminăm simbolurile neproductive',
+  'cfg.prod.remove.b': 'Iterația este stabilă: N = {N}. Neterminalele neproductive {bad} nu pot încheia nicio derivare, deci le eliminăm împreună cu <b>toate producțiile în care apar</b>.',
+  'cfg.prod.empty.t': '3. Limbajul este vid',
+  'cfg.prod.empty.b': 'Simbolul de start {S} nu este productiv (N = {N}), deci L(G) = ∅. Algoritmul se oprește.',
+
+  'cfg.acc.iter.t': '4. Simboluri accesibile: V{i}',
+  'cfg.acc.iter0.b': 'Un simbol este <b>accesibil</b> dacă apare într-o formă propozițională derivată din {S}. Pornim cu V<sub>0</sub> = {V}.',
+  'cfg.acc.iterI.b': 'V<sub>{i}</sub> = V<sub>{i1}</sub> ∪ {X | A → αXβ, A ∈ V<sub>{i1}</sub>}: adăugăm toate simbolurile din părțile drepte ale neterminalelor accesibile. V<sub>{i}</sub> = {V}.',
+  'cfg.acc.none.t': '4. Toate simbolurile sunt accesibile',
+  'cfg.acc.none.b': 'Iterația este stabilă și toate simbolurile sunt accesibile. Nu eliminăm nimic. Gramatica este acum <b>redusă</b> (proprie).',
+  'cfg.acc.remove.t': '4. Eliminăm simbolurile inaccesibile',
+  'cfg.acc.remove.b': 'V = {V}. Simbolurile {bad} nu pot fi atinse din simbolul de start, deci le eliminăm împreună cu producțiile lor. Gramatica este acum <b>redusă</b> (proprie).',
+
+  'cfg.cnf.intro.t': '5. Spre forma normală Chomsky',
+  'cfg.cnf.intro.b': 'În FNC fiecare producție este A → BC sau A → a (plus S → ε dacă e nevoie). Producțiile marcate nu au această formă: conțin terminale lângă alte simboluri sau au mai mult de două simboluri.',
+  'cfg.cnf.intro.ok': 'Toate producțiile au deja forma A → BC sau A → a (plus eventual S → ε). Gramatica este deja în FNC.',
+  'cfg.cnf.term.t': '5a. Terminale în producții lungi',
+  'cfg.cnf.term.b': 'În fiecare parte dreaptă de lungime ≥ 2 înlocuim fiecare terminal a cu un neterminal nou X<sub>a</sub> și adăugăm X<sub>a</sub> → a.',
+  'cfg.cnf.long.t': '5b. Spargem producțiile lungi ale lui {A}',
+  'cfg.cnf.long.b': 'O producție A → B<sub>1</sub>B<sub>2</sub>…B<sub>k</sub> cu k ≥ 3 devine lanțul A → B<sub>1</sub>Y<sub>1</sub>, Y<sub>1</sub> → B<sub>2</sub>Y<sub>2</sub>, …, Y<sub>k-2</sub> → B<sub>k-1</sub>B<sub>k</sub>, cu neterminale noi Y (cozile identice refolosesc același Y).',
+  'cfg.cnf.done.t': '5. Gramatica în FNC',
+  'cfg.cnf.done.b': 'Toate producțiile au acum forma A → BC sau A → a (și eventual S → ε).',
+
+  'cfg.gnf.intro.t': '6. Spre forma normală Greibach',
+  'cfg.gnf.intro.b': 'În FNG fiecare producție este A → aα cu a ∈ Σ și α ∈ N*. Pornim de la FNC și numerotăm cele {n} neterminale A<sub>1</sub>, …, A<sub>n</sub>. Scopul primei treceri: orice producție A<sub>i</sub> → A<sub>j</sub>γ are j &gt; i.',
+  'cfg.gnf.intro.eps': 'În FNG fiecare producție este A → aα cu a ∈ Σ și α ∈ N*. Punem deoparte {S} → ε (o adăugăm la final) și numerotăm cele {n} neterminale A<sub>1</sub>, …, A<sub>n</sub>. Scopul primei treceri: orice producție A<sub>i</sub> → A<sub>j</sub>γ are j &gt; i.',
+  'cfg.gnf.sub.t': '6. Substituim {Aj} în producțiile lui {Ai}',
+  'cfg.gnf.sub.b': '{Ai} (i = {i}) are producții care încep cu {Aj} (j = {j} &lt; i). Înlocuim fiecare {Ai} → {Aj}γ cu {Ai} → δγ pentru fiecare producție {Aj} → δ.',
+  'cfg.gnf.lr.t': '6. Recursivitatea stângă a lui {A}',
+  'cfg.gnf.lr.b': '{A} este acum direct recursiv la stânga: {A} → {A}α cu α ∈ {alphas}; celelalte producții sunt β ∈ {betas}. Cu neterminalul nou {Z}: {A} → β | β{Z} și {Z} → α | α{Z} (varianta fără ε).',
+  'cfg.gnf.back.t': '6. Substituția înapoi',
+  'cfg.gnf.back.b': 'Acum orice A<sub>i</sub> → A<sub>j</sub>γ are j &gt; i, deci ultimul neterminal {An} are doar producții care încep cu terminal. Mergând înapoi (A<sub>n-1</sub>, …, A<sub>1</sub>, apoi Z-urile), substituim neterminalele de la început care încep deja cu terminale. Producțiile marcate încep încă cu un neterminal.',
+  'cfg.gnf.backsub.t': '6. Substituim în {A}',
+  'cfg.gnf.backsub.b': 'Producții ale lui {A} încep cu {B}, ale căror producții încep toate, deja, cu un terminal. După substituție, toate producțiile lui {A} încep cu un terminal.',
+  'cfg.gnf.backsubZ.b': 'Producțiile neterminalului nou {A} încep cu {B}; acestea încep deja cu terminale, deci le substituim.',
+  'cfg.gnf.unused.t': 'Eliminăm neterminalele inaccesibile',
+  'cfg.gnf.unused.b': 'După substituții, {bad} nu mai apar în nicio parte dreaptă accesibilă din simbolul de start, deci le eliminăm.',
+  'cfg.gnf.done.t': '6. Gramatica în FNG',
+  'cfg.gnf.done.b': 'Fiecare producție are forma A → aα (un terminal urmat de neterminale). În total {n} producții.',
+  'cfg.gnf.done.eps': 'Fiecare producție are forma A → aα, plus {S} → ε, pe care am adăugat-o înapoi. În total {n} producții.',
+
+  // recursivitate stângă
+  'lr.variant': 'Forma producțiilor noi',
+  'lr.variant.eps': "cu ε: A → βA', A' → αA' | ε (analizoare LL)",
+  'lr.variant.noeps': "fără ε: A → β | βA', A' → α | αA' (pentru FNG)",
+  'lr.needClean.eps': 'Algoritmul cere o gramatică <b>fără ε-producții</b> (ele pot ascunde recursivitate stângă, de ex. A → BAα cu B ⇒ ε).',
+  'lr.needClean.cycle': 'Algoritmul cere o gramatică <b>fără cicluri</b> A ⇒⁺ A (formate din redenumiri).',
+  'lr.clean': 'Elimină întâi ε-producțiile și redenumirile',
+  'lr.result': 'Fără recursivitate stângă',
+  'lr.tbl.detect': 'Recursivitate stângă',
+  'lr.col.corners': 'A ⇒⁺ B… pentru B în',
+  'lr.col.direct': 'directă',
+  'lr.col.indirect': 'indirectă',
+  'lr.s.detect.t': 'Detectăm recursivitatea stângă',
+  'lr.s.detect.b': 'A este <b>recursiv la stânga</b> dacă A ⇒⁺ Aα. Pentru fiecare neterminal listăm neterminalele care pot apărea primele într-o formă propozițională derivată din el. Recursive la stânga: {list}. Numerotăm neterminalele A<sub>1</sub>, …, A<sub>n</sub> în ordinea din tabel.',
+  'lr.s.detect.none': 'Niciun neterminal nu poate deriva o formă propozițională care începe cu el însuși, deci gramatica nu are recursivitate stângă. Nu avem nimic de făcut.',
+  'lr.s.sub.t': 'i = {i}: substituim {Aj} în {Ai}',
+  'lr.s.sub.b': '{Ai} are producții {Ai} → {Aj}γ cu j = {j} &lt; i = {i}. Le înlocuim cu {Ai} → δγ pentru fiecare {Aj} → δ. Cum {Aj} a fost deja prelucrat, rezultă doar producții care încep cu un terminal, cu A<sub>k</sub> cu k &gt; j, sau cu {Ai} însuși (recursivitate directă).',
+  'lr.s.direct.t': 'i = {i}: recursivitatea stângă directă a lui {A}',
+  'lr.s.noDirect.b': '{A} nu are producții de forma {A} → {A}α, deci rămâne neschimbat.',
+  'lr.s.direct.eps': 'Separăm producțiile: {A} → {A}α cu α ∈ {alphas} și {A} → β cu β ∈ {betas}. Cum {A} ⇒* βα…α, generăm aceleași cuvinte de la stânga la dreapta: {A} → β{Z} și {Z} → α{Z} | ε.',
+  'lr.s.direct.noeps': 'Separăm producțiile: {A} → {A}α cu α ∈ {alphas} și {A} → β cu β ∈ {betas}. Cum {A} ⇒* βα…α, generăm aceleași cuvinte de la stânga la dreapta: {A} → β | β{Z} și {Z} → α | α{Z}.',
+  'lr.s.done.t': 'Gata',
+  'lr.s.done.b': 'Gramatica din dreapta nu are recursivitate stângă (directă sau indirectă) și generează același limbaj.',
+
+  'theory.cfg': `
+<p>O gramatică independentă de context G = (N, Σ, P, S) se aduce la formă normală într-o ordine fixă. Fiecare pas păstrează L(G).</p>
+<h4>1. ε-producții</h4>
+<p class="formula">N<sub>0</sub> = {A | A → ε},   N<sub>i+1</sub> = N<sub>i</sub> ∪ {A | A → α, α ∈ N<sub>i</sub>*}</p>
+<p>Fiecare producție A → α este înlocuită cu toate variantele obținute prin ștergerea unor apariții ale simbolurilor anulabile (în afară de ε). Dacă S este anulabil, ε ∈ L(G): păstrăm S → ε, folosind un nou start S' → S | ε când S apare într-o parte dreaptă.</p>
+<div class="example">S → aSb | ε   ⇒   S' → S | ε,  S → aSb | ab</div>
+<h4>2. Redenumiri (A → B)</h4>
+<p class="formula">N<sub>A</sub> = {B ∈ N | A ⇒* B} ;   A → α pentru orice B ∈ N<sub>A</sub>, B → α care nu e redenumire</p>
+<div class="example">S → A | a,  A → bA | c   ⇒   S → a | bA | c,  A → bA | c</div>
+<h4>3. Simboluri neproductive</h4>
+<p class="formula">N<sub>0</sub> = ∅,   N<sub>i+1</sub> = {A | A → α, α ∈ (N<sub>i</sub> ∪ Σ)*}</p>
+<p>Neterminalele din afara lui N se elimină, împreună cu toate producțiile în care apar. Dacă S ∉ N, atunci L(G) = ∅.</p>
+<h4>4. Simboluri inaccesibile</h4>
+<p class="formula">V<sub>0</sub> = {S},   V<sub>i+1</sub> = V<sub>i</sub> ∪ {X | A → αXβ, A ∈ V<sub>i</sub>}</p>
+<p>Ordinea 3 → 4 contează: eliminarea simbolurilor neproductive poate face altele inaccesibile, nu invers.</p>
+<div class="example">S → a | AB,  A → a   (B neproductiv) ⇒ S → a,  A → a ⇒ (A inaccesibil) S → a</div>
+<h4>5. Forma normală Chomsky (FNC)</h4>
+<p>Producții <span class="formula">A → BC</span> sau <span class="formula">A → a</span> (și S → ε dacă ε ∈ L, cu S absent din părțile drepte). Pornind de la gramatica redusă:</p>
+<ol><li>în părțile drepte de lungime ≥ 2, înlocuim fiecare terminal a cu X<sub>a</sub> și adăugăm X<sub>a</sub> → a;</li>
+<li>înlocuim A → B<sub>1</sub>…B<sub>k</sub> (k ≥ 3) cu A → B<sub>1</sub>Y<sub>1</sub>, Y<sub>1</sub> → B<sub>2</sub>Y<sub>2</sub>, …, Y<sub>k-2</sub> → B<sub>k-1</sub>B<sub>k</sub>.</li></ol>
+<div class="example">S → aSb | ab   ⇒   S → X<sub>a</sub>Y<sub>1</sub> | X<sub>a</sub>X<sub>b</sub>,  Y<sub>1</sub> → SX<sub>b</sub>,  X<sub>a</sub> → a,  X<sub>b</sub> → b</div>
+<h4>6. Forma normală Greibach (FNG)</h4>
+<p>Producții <span class="formula">A → aα</span>, a ∈ Σ, α ∈ N* (și S → ε). Pornind de la FNC, cu neterminalele ordonate A<sub>1</sub>, …, A<sub>n</sub>:</p>
+<ol><li>pentru i = 1..n: pentru j &lt; i, substituim A<sub>j</sub> în fiecare A<sub>i</sub> → A<sub>j</sub>γ; apoi eliminăm recursivitatea stângă directă a lui A<sub>i</sub> cu un nou Z<sub>i</sub> (A<sub>i</sub> → β | βZ<sub>i</sub>, Z<sub>i</sub> → α | αZ<sub>i</sub>);</li>
+<li>acum A<sub>i</sub> → A<sub>j</sub>γ implică j &gt; i, deci A<sub>n</sub> începe cu terminale; substituim înapoi în A<sub>n-1</sub>, …, A<sub>1</sub>;</li>
+<li>la final substituim în producțiile Z (ele încep cu un A<sub>k</sub>).</li></ol>
+<div class="example">A<sub>1</sub> → A<sub>2</sub>A<sub>2</sub> | a,  A<sub>2</sub> → A<sub>1</sub>A<sub>2</sub> | b<br>A<sub>2</sub> → A<sub>2</sub>A<sub>2</sub>A<sub>2</sub> | aA<sub>2</sub> | b   ⇒   A<sub>2</sub> → aA<sub>2</sub> | b | aA<sub>2</sub>Z | bZ,  Z → A<sub>2</sub>A<sub>2</sub> | A<sub>2</sub>A<sub>2</sub>Z<br>apoi în A<sub>1</sub> și Z se substituie în față producțiile lui A<sub>2</sub>.</div>`,
+  'theory.lr': `
+<p>O gramatică este <b>recursivă la stânga</b> dacă un neterminal A are o derivare A ⇒⁺ Aα. Recursivitatea este <b>directă</b> dacă A → Aα este producție și <b>indirectă</b> altfel (de ex. S → Aa, A → Sd).</p>
+<p>De ce o eliminăm: un analizor descendent (recursiv / LL) care expandează A l-ar apela din nou pe A fără să consume intrare — buclă infinită. Este și un pas al formei normale Greibach.</p>
+<h4>Recursivitate stângă directă</h4>
+<p>Grupăm producțiile lui A: <span class="formula">A → Aα<sub>1</sub> | … | Aα<sub>m</sub> | β<sub>1</sub> | … | β<sub>n</sub></span> (niciun β nu începe cu A). A generează un β<sub>j</sub> urmat de orice șir de α-uri, deci îl generăm de la stânga la dreapta cu un neterminal nou A':</p>
+<ul><li class="formula">cu ε:  A → β<sub>1</sub>A' | … | β<sub>n</sub>A',   A' → α<sub>1</sub>A' | … | α<sub>m</sub>A' | ε</li>
+<li class="formula">fără ε:  A → β<sub>j</sub> | β<sub>j</sub>A',   A' → α<sub>i</sub> | α<sub>i</sub>A'</li></ul>
+<div class="example">E → E+T | T   ⇒   E → TE',  E' → +TE' | ε   (sau  E → T | TE',  E' → +T | +TE')</div>
+<div class="example">A → Aa | Ab | c | d   ⇒   A → cA' | dA',  A' → aA' | bA' | ε</div>
+<h4>Recursivitate stângă indirectă (algoritmul general)</h4>
+<p>Condiție: fără ε-producții și fără cicluri A ⇒⁺ A. Ordonăm neterminalele A<sub>1</sub>, …, A<sub>n</sub>.</p>
+<p class="formula">pentru i = 1..n:<br>&emsp;pentru j = 1..i−1: înlocuim fiecare A<sub>i</sub> → A<sub>j</sub>γ cu A<sub>i</sub> → δγ pentru toate A<sub>j</sub> → δ<br>&emsp;eliminăm recursivitatea stângă directă a lui A<sub>i</sub></p>
+<p>Invariant: după pasul i, orice A<sub>i</sub> → A<sub>k</sub>γ are k &gt; i, deci nu mai poate rămâne niciun ciclu de „primele simboluri”.</p>
+<div class="example">S → Aa | b,  A → Ac | Sd | c<br>i = 2, j = 1:  A → Ac | Aad | bd | c<br>directă:  A → bdA' | cA',  A' → cA' | adA' | ε</div>`,
 };

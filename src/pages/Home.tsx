@@ -6,6 +6,8 @@ const TOPICS: { id: PageId; icon: string; nav: string; desc: string }[] = [
   { id: 'nfa', icon: '⇉', nav: 'nav.nfa', desc: 'home.nfa' },
   { id: 'min', icon: '⊟', nav: 'nav.min', desc: 'home.min' },
   { id: 'pump', icon: 'xyⁱz', nav: 'nav.pump', desc: 'home.pump' },
+  { id: 'cfg', icon: 'A→BC', nav: 'nav.cfg', desc: 'home.cfg' },
+  { id: 'lr', icon: 'A→Aα', nav: 'nav.lr', desc: 'home.lr' },
 ];
 
 export function HomePage({ goTo }: { goTo: (p: PageId) => void }) {
@@ -23,6 +25,7 @@ export function HomePage({ goTo }: { goTo: (p: PageId) => void }) {
         ))}
       </div>
       <p className="muted">{t('home.flow')}</p>
+      <p className="muted">{t('home.flowCfg')}</p>
     </>
   );
 }

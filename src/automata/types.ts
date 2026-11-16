@@ -1,3 +1,5 @@
+import type { GrammarView } from '../grammar/types';
+
 export const EPSILON = 'ε';
 
 export type State = string;
@@ -14,8 +16,11 @@ export interface Automaton {
 
 export type Edge = [from: State, symbol: Symbol, to: State];
 
-/** Text that is either literal or an i18n key with interpolation params. */
-export type Text = string | { key: string; params?: Record<string, string | number> };
+/**
+ * Text that is either literal or an i18n key with interpolation params.
+ * `params` are HTML-escaped; `raw` params are trusted HTML (e.g. grammar symbols with subscripts).
+ */
+export type Text = string | { key: string; params?: Record<string, string | number>; raw?: Record<string, string> };
 
 export interface Highlight {
   /** States drawn with the primary highlight color. */
@@ -40,12 +45,17 @@ export interface StepTable {
   headers: Text[];
   rows: string[][];
   highlightRows?: number[];
+  /** Cells contain trusted HTML. */
+  html?: boolean;
 }
 
 export interface Step {
+  /** Label of the algorithm phase this step belongs to; the stepper shows phases as jump links. */
+  phase?: Text;
   title: Text;
   body: Text;
-  graphs: GraphView[];
+  graphs?: GraphView[];
+  grammars?: GrammarView[];
   tables?: StepTable[];
 }
 

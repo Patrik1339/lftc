@@ -10,16 +10,14 @@ export function Table({ table }: { table: StepTable }) {
         <thead>
           <tr>
             {table.headers.map((h, i) => (
-              <th key={i} dangerouslySetInnerHTML={{ __html: tx(h) }} />
+              <th key={i} dangerouslySetInnerHTML={{ __html: table.html && typeof h === 'string' ? h : tx(h) }} />
             ))}
           </tr>
         </thead>
         <tbody>
           {table.rows.map((row, i) => (
             <tr key={i} className={table.highlightRows?.includes(i) ? 'hl' : undefined}>
-              {row.map((c, j) => (
-                <td key={j}>{c}</td>
-              ))}
+              {row.map((c, j) => (table.html ? <td key={j} dangerouslySetInnerHTML={{ __html: c }} /> : <td key={j}>{c}</td>))}
             </tr>
           ))}
         </tbody>

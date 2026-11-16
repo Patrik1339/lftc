@@ -6,6 +6,12 @@ import { parseAutomaton, serializeAutomaton } from './automata/parse';
 import { accepts, allWords } from './automata/simulate';
 import { subsetConstruction } from './automata/subset';
 import { Automaton, EPSILON, hasEpsilon, isComplete, isDeterministic } from './automata/types';
+import { CFG_EXAMPLES, LR_EXAMPLES } from './grammar/examples';
+import { eliminateLeftRecursion, isLeftRecursive, leftRecPreconditions } from './grammar/leftrec';
+import { derives, wordsUpTo } from './grammar/membership';
+import { TooLargeError, isCNF, isGNF, normalize } from './grammar/normal';
+import { removeEpsilonAndRenames } from './grammar/simplify';
+import { Grammar, parseGrammar, serializeGrammar } from './grammar/types';
 import { LANGUAGES } from './pumping/languages';
 import { allSplits, breakingI } from './pumping/pumping';
 
@@ -113,4 +119,98 @@ describe('pumping lemma catalog', () => {
       }
     });
   }
+});
+
+const parseG = (text: string): Grammar => {
+  const r = parseGrammar(text);
+  if (!r.ok) throw new Error(JSON.stringify(r.errors));
+  return r.grammar;
+};
+
+function randomGrammar(seed: number): Grammar {
+  let s = seed;
+  const rnd = () => ((s = (s * 1103515245 + 12345) % 2 ** 31) / 2 ** 31);
+  const nts = ['S', 'A', 'B', 'C'];
+  const syms = [...nts, 'a', 'b'];
+  const lines = nts.map((A) => {
+    const alts = Array.from({ length: 1 + Math.floor(rnd() * 3) }, () => {
+      const len = Math.floor(rnd() * 4);
+      return Array.from({ length: len }, () => syms[Math.floor(rnd() * syms.length)]).join('') || 'ε';
+    });
+    return `${A} -> ${alts.join(' | ')}`;
+  });
+  return parseG(lines.join('\n'));
+}
+
+const grammarExamples = [...CFG_EXAMPLES, ...LR_EXAMPLES].map((e) => parseG(e.text));
+const randomGrammars = Array.from({ length: 60 }, (_, i) => randomGrammar(i + 7));
+
+function expectSameLanguage(a: Grammar, b: Grammar, n = 5) {
+  expect(wordsUpTo(b, n)).toEqual(wordsUpTo(a, n));
+}
+
+describe('grammars', () => {
+  it('parses and round-trips through serialize', () => {
+    const g = parseG('S -> aSb | X_a B1 | ε\nX_a -> a\nB1 -> b');
+    expect(g.prods.S).toEqual([['a', 'S', 'b'], ['X_a', 'B1'], []]);
+    for (const x of [...grammarExamples, ...randomGrammars]) expect(parseG(serializeGrammar(x))).toEqual(x);
+  });
+  it('membership agrees with enumeration', () => {
+    for (const g of [...grammarExamples, ...randomGrammars.slice(0, 20)]) {
+      const words = new Set(wordsUpTo(g, 4));
+      for (const w of allWords(g.terminals, 4)) expect(derives(g, w), w.join('')).toBe(words.has(w.join('')));
+    }
+  });
+});
+
+describe('CNF and GNF', () => {
+  it('produce equivalent grammars of the right shape', () => {
+    let gnfs = 0;
+    for (const g of [...grammarExamples, ...randomGrammars]) {
+      const run = normalize(g);
+      expect(run.steps.length).toBeGreaterThan(4);
+      if (run.empty) {
+        expect(wordsUpTo(g, 6)).toEqual([]);
+        continue;
+      }
+      expect(isCNF(run.cnf!), serializeGrammar(run.cnf!)).toBe(true);
+      expectSameLanguage(g, run.cnf!);
+      if (run.tooLarge) continue;
+      gnfs++;
+      expect(isGNF(run.gnf!), serializeGrammar(run.gnf!)).toBe(true);
+      expectSameLanguage(g, run.gnf!);
+    }
+    expect(gnfs).toBeGreaterThan(30);
+  });
+  it('detects an empty language', () => {
+    expect(normalize(parseG('S -> aS | AB\nA -> a')).empty).toBe(true);
+  });
+});
+
+describe('left recursion', () => {
+  it('matches the textbook results', () => {
+    const r = eliminateLeftRecursion(parseG(LR_EXAMPLES[0].text), true).result;
+    expect(serializeGrammar(r)).toBe("E -> TE'\nE' -> +TE' | ε\nT -> FT'\nT' -> *FT' | ε\nF -> (E) | a");
+    const ind = eliminateLeftRecursion(parseG(LR_EXAMPLES[1].text), true).result;
+    expect(serializeGrammar(ind)).toBe("S -> Aa | b\nA -> bdA' | cA'\nA' -> cA' | adA' | ε");
+  });
+  it('removes all left recursion and keeps the language', () => {
+    for (const g0 of [...grammarExamples, ...randomGrammars]) {
+      const pre = leftRecPreconditions(g0);
+      const g = pre.epsilon || pre.cycle ? removeEpsilonAndRenames(g0) : g0;
+      const p2 = leftRecPreconditions(g);
+      expect(p2.epsilon || p2.cycle).toBe(false);
+      for (const withEps of [true, false]) {
+        let result: Grammar;
+        try {
+          result = eliminateLeftRecursion(g, withEps).result;
+        } catch (e) {
+          if (e instanceof TooLargeError) continue;
+          throw e;
+        }
+        expect(isLeftRecursive(result), serializeGrammar(result)).toBe(false);
+        expectSameLanguage(g0, result);
+      }
+    }
+  });
 });
