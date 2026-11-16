@@ -398,4 +398,45 @@ export const ro: Dict = {
 <p class="formula">pentru i = 1..n:<br>&emsp;pentru j = 1..i−1: înlocuim fiecare A<sub>i</sub> → A<sub>j</sub>γ cu A<sub>i</sub> → δγ pentru toate A<sub>j</sub> → δ<br>&emsp;eliminăm recursivitatea stângă directă a lui A<sub>i</sub></p>
 <p>Invariant: după pasul i, orice A<sub>i</sub> → A<sub>k</sub>γ are k &gt; i, deci nu mai poate rămâne niciun ciclu de „primele simboluri”.</p>
 <div class="example">S → Aa | b,  A → Ac | Sd | c<br>i = 2, j = 1:  A → Ac | Aad | bd | c<br>directă:  A → bdA' | cA',  A' → cA' | adA' | ε</div>`,
+  // ambiguitate
+  'nav.amb': 'Ambiguitate',
+  'home.amb': 'Caută un cuvânt cu doi arbori de derivare diferiți și compară cele două derivări stângi și cele două derivări drepte.',
+  'ex.amb.expr': 'E → E+E | E*E (ambiguă)',
+  'ex.amb.dangling': '„Dangling else”',
+  'ex.amb.eps': 'S → AB cu A, B anulabile',
+  'ex.amb.concat': 'Concatenare S → SS',
+  'ex.amb.inherent': 'Limbaj inerent ambiguu',
+  'ex.amb.exprFixed': 'E, T, F (neambiguă)',
+  'amb.maxLen': 'Caută toate cuvintele de lungime ≤ {n}',
+  'amb.ownWord': 'Sau verifică un cuvânt anume',
+  'amb.ownWord.ph': 'ex. a+a*a (gol = căutare)',
+  'amb.found': '<b>Gramatica este ambiguă.</b> Cel mai scurt cuvânt cu doi arbori de derivare diferiți este <b>{w}</b> (lungime {n}).',
+  'amb.notFound': 'Niciun cuvânt de lungime ≤ {n} nu are doi arbori de derivare ({count} cuvinte generate, toate verificate). Asta <b>nu</b> demonstrează că gramatica e neambiguă — ambiguitatea este nedecidabilă în general — dar este un indiciu bun. Încearcă o lungime mai mare.',
+  'amb.word.none': 'Cuvântul <b>{w}</b> nu este generat de gramatică.',
+  'amb.word.one': 'Cuvântul <b>{w}</b> are un singur arbore de derivare, deci nu demonstrează ambiguitatea.',
+  'amb.word.two': '<b>{w}</b> are (cel puțin) doi arbori de derivare diferiți, deci gramatica este ambiguă.',
+  'amb.trees': 'Arbori de derivare',
+  'amb.trees.b': 'Ambii arbori au rădăcina {root} și aceeași frontieră <b>{w}</b>. Subarborii evidențiați arată unde folosesc prima dată producții diferite.',
+  'amb.single.tree': 'Singurul arbore de derivare al lui <b>{w}</b>, cu rădăcina {root}.',
+  'amb.treeN': 'Arborele {n}',
+  'amb.left': 'Derivări de stânga',
+  'amb.right': 'Derivări de dreapta',
+  'amb.left.b': 'La fiecare pas se rescrie neterminalul <u>cel mai din stânga</u> (subliniat; producția folosită e în dreapta). Fiecare arbore are exact o derivare de stânga, deci doi arbori dau două derivări de stânga distincte ale aceluiași cuvânt. Linia evidențiată arată unde se despart.',
+  'amb.right.b': 'La fiecare pas se rescrie neterminalul <u>cel mai din dreapta</u>. Și aici, doi arbori diferiți dau două derivări de dreapta diferite ale aceluiași cuvânt; linia evidențiată arată unde se despart.',
+  'amb.single.deriv': 'Neterminalul rescris este subliniat; producția folosită e în dreapta.',
+  'amb.derivN': 'Derivarea {n}',
+  'theory.amb': `
+<p>O gramatică independentă de context G este <b>ambiguă</b> dacă un cuvânt w ∈ L(G) are doi <b>arbori de derivare</b> diferiți. Echivalent, w are două derivări <b>de stânga</b> diferite, sau două derivări <b>de dreapta</b> diferite (fiecărui arbore îi corespunde exact o derivare de stânga și una de dreapta).</p>
+<p>Două derivări care doar rescriu neterminalele în altă ordine (același arbore) <i>nu</i> contează — de aceea comparăm stânga cu stânga și dreapta cu dreapta.</p>
+<h4>Exemplu</h4>
+<div class="example">E → E+E | E*E | a,   w = a+a*a<br>
+E ⇒ <u>E</u>+E ⇒ a+<u>E</u> ⇒ a+<u>E</u>*E ⇒ a+a*<u>E</u> ⇒ a+a*a   (a+(a*a))<br>
+E ⇒ <u>E</u>*E ⇒ <u>E</u>+E*E ⇒ a+<u>E</u>*E ⇒ a+a*<u>E</u> ⇒ a+a*a   ((a+a)*a)</div>
+<h4>De reținut</h4>
+<ul>
+<li>Ambiguitatea este <b>nedecidabilă</b>: niciun algoritm nu o decide pentru orice gramatică. Aici căutăm toate cuvintele până la o lungime: găsirea unui cuvânt demonstrează ambiguitatea, negăsirea nu demonstrează contrariul.</li>
+<li>Ambiguitatea este o proprietate a <b>gramaticii</b>; adesea există o gramatică echivalentă neambiguă, de ex. E → E+T | T, T → T*F | F, F → (E) | a (precedență pe niveluri, asociativitate la stânga).</li>
+<li>Unele limbaje sunt <b>inerent ambigue</b>: orice gramatică pentru ele este ambiguă, de ex. {a<sup>i</sup>b<sup>j</sup>c<sup>k</sup> | i = j sau j = k}.</li>
+<li>Surse tipice: E → EαE (lipsă de precedență/asociativitate), S → SS, „dangling else” și două moduri de a deriva ε.</li>
+</ul>`,
 };

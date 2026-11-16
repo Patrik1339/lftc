@@ -6,7 +6,8 @@ import { parseAutomaton, serializeAutomaton } from './automata/parse';
 import { accepts, allWords } from './automata/simulate';
 import { subsetConstruction } from './automata/subset';
 import { Automaton, EPSILON, hasEpsilon, isComplete, isDeterministic } from './automata/types';
-import { CFG_EXAMPLES, LR_EXAMPLES } from './grammar/examples';
+import { Tree, derivationOf, findAmbiguity, treeKey, treesByYield, treesForWord } from './grammar/ambiguity';
+import { AMB_EXAMPLES, CFG_EXAMPLES, LR_EXAMPLES } from './grammar/examples';
 import { eliminateLeftRecursion, isLeftRecursive, leftRecPreconditions } from './grammar/leftrec';
 import { derives, wordsUpTo } from './grammar/membership';
 import { TooLargeError, isCNF, isGNF, normalize } from './grammar/normal';
@@ -211,6 +212,45 @@ describe('left recursion', () => {
         expect(isLeftRecursive(result), serializeGrammar(result)).toBe(false);
         expectSameLanguage(g0, result);
       }
+    }
+  });
+});
+
+const yieldOf = (t: Tree): string => (t.children ? t.children.map(yieldOf).join('') : t.sym);
+function expectValidTree(g: Grammar, t: Tree) {
+  if (!t.children) return;
+  expect(g.prods[t.sym].some((r) => r.join(' ') === t.children!.map((c) => c.sym).join(' '))).toBe(true);
+  t.children.forEach((c) => expectValidTree(g, c));
+}
+
+describe('ambiguity', () => {
+  it('finds the textbook witnesses', () => {
+    const found = AMB_EXAMPLES.map((e) => findAmbiguity(parseG(e.text), 6).word);
+    expect(found).toEqual(['a*a+a', 'iiaea', 'a', '()()()', 'abc', null]);
+    expect(findAmbiguity(parseG('S -> aSb | ab'), 8).word).toBeNull();
+    expect(treesForWord(parseG(AMB_EXAMPLES[0].text), 'a+a*a')).toHaveLength(2);
+    expect(treesForWord(parseG(AMB_EXAMPLES[5].text), 'a+a*a')).toHaveLength(1);
+  });
+  it('returns two valid, distinct trees with distinct leftmost and rightmost derivations', () => {
+    for (const g of [...grammarExamples, ...randomGrammars]) {
+      const { word, trees } = findAmbiguity(g, 4);
+      if (word === null) continue;
+      expect(treeKey(trees[0])).not.toBe(treeKey(trees[1]));
+      for (const t of trees) {
+        expectValidTree(g, t);
+        expect(yieldOf(t)).toBe(word);
+      }
+      for (const mode of ['left', 'right'] as const) {
+        const [d1, d2] = trees.map((t) => derivationOf(t, mode));
+        expect(d1.forms.at(-1)!.join('')).toBe(word);
+        expect(JSON.stringify(d1.forms)).not.toBe(JSON.stringify(d2.forms));
+      }
+    }
+  });
+  it('checking a single word agrees with the full search', () => {
+    for (const g of randomGrammars.slice(0, 25)) {
+      const all = treesByYield(g, 4).get(g.start)!;
+      for (const [w, b] of all) expect(treesForWord(g, w).length, w).toBe(b.trees.length);
     }
   });
 });

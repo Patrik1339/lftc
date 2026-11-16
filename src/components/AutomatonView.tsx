@@ -1,5 +1,5 @@
 import type { Viz } from '@viz-js/viz';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { DotPalette, toDot } from '../automata/dot';
 import type { Automaton, Highlight, Text } from '../automata/types';
 import { Html, useI18n } from '../i18n';
@@ -24,6 +24,12 @@ const LIGHT: DotPalette = { fg: '#1f2937', muted: '#b6bcc6', hl: '#2563eb', hlFi
 const DARK: DotPalette = { fg: '#e5e7eb', muted: '#4b5563', hl: '#60a5fa', hlFill: '#1e3a5f', hl2: '#fbbf24', hl2Fill: '#4a3410' };
 
 export function AutomatonView({ automaton, highlight, title }: { automaton: Automaton; highlight?: Highlight; title?: Text }) {
+  const makeDot = useCallback((pal: DotPalette) => toDot(automaton, highlight, pal), [automaton, highlight]);
+  return <GraphvizView makeDot={makeDot} title={title} />;
+}
+
+/** Renders any Graphviz graph; `makeDot` gets the palette for the current color scheme. */
+export function GraphvizView({ makeDot, title, className }: { makeDot: (pal: DotPalette) => string; title?: Text; className?: string }) {
   const { tx } = useI18n();
   const ref = useRef<HTMLDivElement>(null);
   const dark = useDark();
@@ -31,7 +37,7 @@ export function AutomatonView({ automaton, highlight, title }: { automaton: Auto
 
   useEffect(() => {
     let cancelled = false;
-    const dot = toDot(automaton, highlight, dark ? DARK : LIGHT);
+    const dot = makeDot(dark ? DARK : LIGHT);
     getViz()
       .then((viz) => {
         if (cancelled || !ref.current) return;
@@ -45,10 +51,10 @@ export function AutomatonView({ automaton, highlight, title }: { automaton: Auto
     return () => {
       cancelled = true;
     };
-  }, [automaton, highlight, dark]);
+  }, [makeDot, dark]);
 
   return (
-    <figure className="graph">
+    <figure className={className ? `graph ${className}` : 'graph'}>
       {title && <Html as="div" className="graph-title" html={tx(title)} />}
       <div className="graph-svg" ref={ref} />
       {error && <div className="error">{error}</div>}

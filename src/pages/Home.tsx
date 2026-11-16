@@ -8,6 +8,7 @@ const TOPICS: { id: PageId; icon: string; nav: string; desc: string }[] = [
   { id: 'pump', icon: 'xyⁱz', nav: 'nav.pump', desc: 'home.pump' },
   { id: 'cfg', icon: 'A→BC', nav: 'nav.cfg', desc: 'home.cfg' },
   { id: 'lr', icon: 'A→Aα', nav: 'nav.lr', desc: 'home.lr' },
+  { id: 'amb', icon: '⋀ ≠ ⋀', nav: 'nav.amb', desc: 'home.amb' },
 ];
 
 export function HomePage({ goTo }: { goTo: (p: PageId) => void }) {

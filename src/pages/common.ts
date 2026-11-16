@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { parseAutomaton } from '../automata/parse';
 
-export type PageId = 'home' | 'epsilon' | 'nfa' | 'min' | 'pump' | 'cfg' | 'lr';
+export type PageId = 'home' | 'epsilon' | 'nfa' | 'min' | 'pump' | 'cfg' | 'lr' | 'amb';
 
 export interface AlgoPageProps {
   text: string;

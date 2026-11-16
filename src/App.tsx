@@ -1,8 +1,9 @@
 import { useCallback, useEffect, useState } from 'react';
 import { DFA_EXAMPLES, EPSILON_EXAMPLES, NFA_EXAMPLES } from './automata/examples';
-import { CFG_EXAMPLES, LR_EXAMPLES } from './grammar/examples';
+import { AMB_EXAMPLES, CFG_EXAMPLES, LR_EXAMPLES } from './grammar/examples';
 import { useI18n } from './i18n';
 import type { PageId } from './pages/common';
+import { AmbiguityPage } from './pages/Ambiguity';
 import { HomePage } from './pages/Home';
 import { EpsilonPage } from './pages/Epsilon';
 import { LeftRecPage } from './pages/LeftRec';
@@ -11,13 +12,13 @@ import { NormalFormsPage } from './pages/Normal';
 import { NfaToDfaPage } from './pages/NfaToDfa';
 import { PumpingPage } from './pages/Pumping';
 
-const PAGES: PageId[] = ['home', 'epsilon', 'nfa', 'min', 'pump', 'cfg', 'lr'];
+const PAGES: PageId[] = ['home', 'epsilon', 'nfa', 'min', 'pump', 'cfg', 'lr', 'amb'];
 const pageFromHash = (): PageId => {
   const h = window.location.hash.slice(1) as PageId;
   return PAGES.includes(h) ? h : 'home';
 };
 
-type Texts = Record<'epsilon' | 'nfa' | 'min' | 'cfg' | 'lr', string>;
+type Texts = Record<'epsilon' | 'nfa' | 'min' | 'cfg' | 'lr' | 'amb', string>;
 
 export function App() {
   const { t, lang, setLang } = useI18n();
@@ -28,6 +29,7 @@ export function App() {
     min: DFA_EXAMPLES[0].text,
     cfg: CFG_EXAMPLES[0].text,
     lr: LR_EXAMPLES[0].text,
+    amb: AMB_EXAMPLES[0].text,
   });
 
   useEffect(() => {
@@ -74,6 +76,7 @@ export function App() {
         {page === 'pump' && <PumpingPage />}
         {page === 'cfg' && <NormalFormsPage text={texts.cfg} setText={setText('cfg')} goTo={goTo} />}
         {page === 'lr' && <LeftRecPage text={texts.lr} setText={setText('lr')} goTo={goTo} />}
+        {page === 'amb' && <AmbiguityPage text={texts.amb} setText={setText('amb')} goTo={goTo} />}
       </main>
     </>
   );

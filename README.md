@@ -10,6 +10,7 @@ Interactive study aid for *Limbaje formale și tehnici de compilare* (RO/EN):
 - **Lema de pompare** — proof by contradiction with a random p, every split xyz checked
 - **FNC & FNG** — ε-productions, renames, unproductive and inaccessible symbols, then Chomsky and Greibach normal form
 - **Recursivitate stângă** — direct and indirect left recursion, with or without ε in the new productions
+- **Ambiguitate** — bounded search for a word with two derivation trees; both trees, both leftmost and both rightmost derivations
 
 ```sh
 npm install

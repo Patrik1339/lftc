@@ -70,3 +70,44 @@ A -> b | ε
 B -> c | ε`,
   },
 ];
+
+export const AMB_EXAMPLES: Example[] = [
+  {
+    name: 'ex.amb.expr',
+    text: `# no precedence, no associativity
+E -> E+E | E*E | (E) | a`,
+  },
+  {
+    name: 'ex.amb.dangling',
+    text: `# dangling else: i = if, e = else
+S -> iS | iSeS | a`,
+  },
+  {
+    name: 'ex.amb.eps',
+    text: `# "a" can come from A or from B
+S -> AB
+A -> a | ε
+B -> a | ε`,
+  },
+  {
+    name: 'ex.amb.concat',
+    text: `# SS makes the split of a concatenation ambiguous
+S -> SS | (S) | ()`,
+  },
+  {
+    name: 'ex.amb.inherent',
+    text: `# {aⁱbʲcᵏ | i = j ≥ 1 or j = k ≥ 1}: inherently ambiguous (abc is in both parts)
+S -> PC | AQ
+P -> aPb | ab
+C -> cC | ε
+A -> aA | ε
+Q -> bQc | bc`,
+  },
+  {
+    name: 'ex.amb.exprFixed',
+    text: `# unambiguous: precedence through levels, left associativity
+E -> E+T | T
+T -> T*F | F
+F -> (E) | a`,
+  },
+];
