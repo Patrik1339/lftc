@@ -4,6 +4,8 @@
 
 Interactive study aid for *Limbaje formale și tehnici de compilare* (RO/EN):
 
+- **Ierarhia Chomsky** — types 0–3 with an example grammar and derivation for each; a checker that finds the type of any grammar (left sides may be strings like `CB`), generates its words and derives a given word
+- **BNF & EBNF** — metasymbols, EBNF → BNF conversion, worked examples (numbers, identifiers, lists, expressions, if) in BNF, EBNF and A → α form
 - **ε-tranziții** — ε-closures and elimination of ε-transitions
 - **AFN → AFD** — subset construction
 - **Minimizare** — inaccessible states, completion, ≡k partition refinement, quotient AFD

@@ -111,3 +111,60 @@ T -> T*F | F
 F -> (E) | a`,
   },
 ];
+
+/** Grammars of every Chomsky type; the first four are the per-type examples shown on the hierarchy page. */
+export const CHOMSKY_EXAMPLES: Example[] = [
+  {
+    name: 'ex.ch.t3',
+    text: `# type 3, right-linear: words over {a, b} ending in b
+S -> aS | bS | b`,
+  },
+  {
+    name: 'ex.ch.t2',
+    text: `# type 2: { aⁿbⁿ | n ≥ 1 }
+S -> aSb | ab`,
+  },
+  {
+    name: 'ex.ch.t1',
+    text: `# type 1 (monotone): { aⁿbⁿcⁿ | n ≥ 1 }
+S -> aSBC | aBC
+CB -> BC
+aB -> ab
+bB -> bb
+bC -> bc
+cC -> cc`,
+  },
+  {
+    name: 'ex.ch.t0',
+    text: `# type 0: { a^(2ⁿ) | n ≥ 1 }, C doubles every a it passes
+S -> ACaB
+Ca -> aaC
+CB -> DB | E
+aD -> Da
+AD -> AC
+aE -> Ea
+AE -> ε`,
+  },
+  {
+    name: 'ex.ch.t3left',
+    text: `# type 3, left-linear: words over {a, b} starting with a
+S -> Sa | Sb | a`,
+  },
+  {
+    name: 'ex.ch.mixed',
+    text: `# every rule is linear, but right- and left-linear are mixed: { aⁿbⁿ | n ≥ 1 } is not regular
+S -> aA | ab
+A -> Sb`,
+  },
+  {
+    name: 'ex.ch.t2eps',
+    text: `# type 2 with an ε-production: { aⁿbⁿ | n ≥ 0 }
+S -> aSb | ε`,
+  },
+  {
+    name: 'ex.ch.t1eps',
+    text: `# S -> ε is allowed in type 1 when S never appears on a right-hand side
+S -> ε | T
+T -> aTb | ab`,
+  },
+];

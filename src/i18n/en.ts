@@ -441,6 +441,160 @@ E ⇒ <u>E</u>*E ⇒ <u>E</u>+E*E ⇒ a+<u>E</u>*E ⇒ a+a*<u>E</u> ⇒ a+a*a   
 <li>Some languages are <b>inherently ambiguous</b>: every grammar for them is ambiguous, e.g. {a<sup>i</sup>b<sup>j</sup>c<sup>k</sup> | i = j or j = k}.</li>
 <li>Typical sources: E → EαE (missing precedence/associativity), S → SS, the "dangling else", and two ways of deriving ε.</li>
 </ul>`,
+  // Chomsky hierarchy
+  'nav.chomsky': 'Chomsky hierarchy',
+  'home.chomsky': 'The four types of grammars (0–3), their production forms, an example grammar for each, and a checker that finds the type of any grammar.',
+  'ex.ch.t3': 'Type 3 — right-linear (ends in b)',
+  'ex.ch.t2': 'Type 2 — aⁿbⁿ',
+  'ex.ch.t1': 'Type 1 — aⁿbⁿcⁿ',
+  'ex.ch.t0': 'Type 0 — a^(2ⁿ)',
+  'ex.ch.t3left': 'Type 3 — left-linear (starts with a)',
+  'ex.ch.mixed': 'Mixed right/left-linear (not type 3)',
+  'ex.ch.t2eps': 'Type 2 with an ε-production',
+  'ex.ch.t1eps': 'Type 1 with S → ε',
+  'chparse.lhsNoNT': 'the left-hand side "{name}" must contain a nonterminal',
+  'ch.diagram': 'Language classes',
+  'ch.diagram.b': 'ℒ<sub>3</sub> ⊊ ℒ<sub>2</sub> ⊊ ℒ<sub>1</sub> ⊊ ℒ<sub>0</sub>: every inclusion is strict. The language on the right of each ring belongs to that class but not to the next one inside.',
+  'ch.t0.short': 'Type 0 — recursively enumerable',
+  'ch.t1.short': 'Type 1 — context-sensitive',
+  'ch.t2.short': 'Type 2 — context-free',
+  'ch.t3.short': 'Type 3 — regular',
+  'ch.t0.diag': 'halting problem',
+  'ch.t1.diag': 'aⁿbⁿcⁿ',
+  'ch.t2.diag': 'aⁿbⁿ',
+  'ch.t3.diag': 'a*b*',
+  'ch.t0.name': 'Unrestricted grammar',
+  'ch.t1.name': 'Context-sensitive grammar',
+  'ch.t2.name': 'Context-free grammar',
+  'ch.t3.name': 'Regular grammar',
+  'ch.t0.form': 'α → β, α contains a nonterminal',
+  'ch.t1.form': 'α → β, |α| ≤ |β| (or αAβ → αγβ, γ ≠ ε); S → ε only if S is on no right-hand side',
+  'ch.t2.form': 'A → β, A ∈ N, β ∈ (N ∪ Σ)*',
+  'ch.t3.form': 'A → aB | a (right-linear) or A → Ba | a (left-linear); S → ε allowed',
+  'ch.t0.machine': 'Turing machine',
+  'ch.t1.machine': 'Linear bounded automaton',
+  'ch.t2.machine': 'Pushdown automaton',
+  'ch.t3.machine': 'Finite automaton',
+  'ch.t0.lang': '{⟨M, w⟩ | M halts on w}',
+  'ch.t1.lang': '{a<sup>n</sup>b<sup>n</sup>c<sup>n</sup> | n ≥ 1}, {ww | w ∈ {a,b}*}',
+  'ch.t2.lang': '{a<sup>n</sup>b<sup>n</sup> | n ≥ 1}, balanced parentheses',
+  'ch.t3.lang': 'a*b*, identifiers, numbers',
+  'ch.t0.cardLang': 'L(G) = {a<sup>2<sup>n</sup></sup> | n ≥ 1} = {aa, aaaa, a<sup>8</sup>, …}',
+  'ch.t1.cardLang': 'L(G) = {a<sup>n</sup>b<sup>n</sup>c<sup>n</sup> | n ≥ 1}',
+  'ch.t2.cardLang': 'L(G) = {a<sup>n</sup>b<sup>n</sup> | n ≥ 1}',
+  'ch.t3.cardLang': 'L(G) = {a, b}*b — the words over {a, b} that end in b',
+  'ch.t0.why': 'Not type 1: <b>CB → E</b> and <b>AE → ε</b> make the form shorter. A and B are end markers; C walks right doubling each a, then D walks back (or E ends the word and erases A). The language itself is context-sensitive — the grammar is not.',
+  'ch.t1.why': 'Not type 2: the left sides <b>CB</b>, <b>aB</b>, <b>bB</b>, … have length 2 — B becomes b only in the <i>context</i> a_ or b_. Every rule is non-contracting, so it is type 1.',
+  'ch.t2.why': 'Every left side is a single nonterminal, but aSb has a nonterminal in the middle, so it is not linear on one side: not type 3. (aⁿbⁿ is not regular — see the pumping lemma.)',
+  'ch.t3.why': 'Each right side is a terminal, optionally followed by one nonterminal: right-linear. A finite automaton with states S and a final state accepts the same language.',
+  'ch.table': 'The four types at a glance',
+  'ch.col.type': 'Type',
+  'ch.col.grammar': 'Grammar',
+  'ch.col.form': 'Productions',
+  'ch.col.machine': 'Recognized by',
+  'ch.col.example': 'Example language',
+  'ch.typeN': 'Type {n}',
+  'ch.examples': 'One example per type',
+  'ch.load': 'Open in checker',
+  'ch.derivOf': 'Derivation of {w}',
+  'ch.wordsUpTo': 'Words of length ≤ {n}:',
+  'ch.checker': 'Which type is my grammar?',
+  'ch.checker.b': 'Type any grammar — left-hand sides may be strings like <code>CB</code> or <code>aB</code>. The checker tests the conditions from the most restrictive type (3) to the most general (0) and shows the first production that breaks each one.',
+  'ch.editor.help': 'One rule per line: <code>S -> aSBC | aBC</code>, <code>CB -> BC</code>. A left side may be any string with at least one nonterminal. Nonterminals are uppercase letters (optionally indexed: <code>A1</code>, <code>X_a</code>); every other character is a terminal. <code>ε</code> / <code>eps</code> for the empty word. The start symbol is S (or the first nonterminal, or <code>start: X</code>).',
+  'ch.verdict': 'The grammar is of type {n}: {name}.',
+  'ch.linear.right': 'All productions are <b>right-linear</b> (A → wB or A → w).',
+  'ch.linear.left': 'All productions are <b>left-linear</b> (A → Bw or A → w).',
+  'ch.r.startEps': 'an ε-production of the start symbol is allowed only if S appears on no right-hand side',
+  'ch.r.contracting': 'the right side is shorter than the left side (contracting rule)',
+  'ch.r.lhs': 'the left side is not a single nonterminal',
+  'ch.r.notLinear': 'not linear: the nonterminal is not at one end, or there is more than one',
+  'ch.r.mixed': 'right-linear and left-linear rules are mixed — that can generate non-regular languages',
+  'ch.note.eps': 'Type 1 fails only because of ε-productions. They can be removed (see <b>CNF &amp; GNF</b>, step 1) with an equivalent grammar, so the language is context-sensitive anyway.',
+  'ch.note.lang': 'This is the type of the <i>grammar</i>. The language it generates may be of a more restrictive type, if a different grammar for it exists.',
+  'ch.gen': 'Generated words of length ≤ {n}',
+  'ch.gen.none': 'none',
+  'ch.gen.truncated': '(search stopped early — the list may be incomplete)',
+  'ch.ownWord': 'Derive a word',
+  'ch.ownWord.ph': 'e.g. aabbcc',
+  'ch.ownWord.none': 'No derivation of <b>{w}</b> found.',
+  'theory.chomsky': `
+<p>A grammar is G = (N, Σ, P, S): nonterminals N, terminals Σ, start symbol S ∈ N and productions <span class="formula">α → β</span> with α ∈ (N ∪ Σ)*N(N ∪ Σ)* (at least one nonterminal on the left) and β ∈ (N ∪ Σ)*. Chomsky (1956) sorted grammars by how restricted their productions are:</p>
+<h4>Type 0 — unrestricted</h4>
+<p>No restriction besides the one above. Generates the <b>recursively enumerable</b> languages (those accepted by Turing machines).</p>
+<div class="example">S → aAb,  aA → aaAb,  A → ε   (here: aⁿbⁿ, n ≥ 1)</div>
+<h4>Type 1 — context-sensitive</h4>
+<p>Every production is <b>non-contracting</b>: <span class="formula">|α| ≤ |β|</span>. Equivalent form: <span class="formula">αAβ → αγβ</span>, γ ≠ ε — A is rewritten to γ only in the context α_β. Exception: S → ε, if S appears on no right-hand side.</p>
+<div class="example">S → aSBC | aBC,  CB → BC,  aB → ab,  bB → bb,  bC → bc,  cC → cc   (aⁿbⁿcⁿ)</div>
+<h4>Type 2 — context-free</h4>
+<p>The left side is a <b>single nonterminal</b>: <span class="formula">A → β</span>. A is replaced regardless of its neighbours.</p>
+<div class="example">S → aSb | ab   (aⁿbⁿ),    E → E+T | T,  T → T*F | F,  F → (E) | a</div>
+<h4>Type 3 — regular</h4>
+<p><b>Right-linear</b>: <span class="formula">A → aB | a</span>, or <b>left-linear</b>: <span class="formula">A → Ba | a</span> (a ∈ Σ), plus S → ε. All rules must be on the same side. Often the extended form A → wB | w, w ∈ Σ*, is allowed too; it generates the same languages.</p>
+<div class="example">S → aS | bA | b,  A → bA | b   (a*b⁺)</div>
+<h4>Good to know</h4>
+<ul>
+<li>A <b>language</b> is of type k if <i>some</i> grammar of type k generates it. The classes form a strict hierarchy ℒ<sub>3</sub> ⊊ ℒ<sub>2</sub> ⊊ ℒ<sub>1</sub> ⊊ ℒ<sub>0</sub>.</li>
+<li>Every type 3 grammar is type 2. Type 2 grammars with ε-productions are not literally type 1, but ε-productions can always be removed, so ℒ<sub>2</sub> ⊆ ℒ<sub>1</sub> still holds for languages.</li>
+<li>Membership (is w ∈ L(G)?) is decidable for types 1, 2, 3 — for type 1, sentential forms never get longer than w — and undecidable for type 0.</li>
+</ul>`,
+  // BNF & EBNF
+  'nav.bnf': 'BNF & EBNF',
+  'home.bnf': 'The notations used to write the syntax of programming languages: metasymbols, EBNF → BNF conversion and worked examples.',
+  'bnf.meta': 'Metasymbols',
+  'bnf.col.meaning': 'Meaning',
+  'bnf.meta.def': 'is defined as',
+  'bnf.meta.alt': 'alternative (or)',
+  'bnf.meta.nt': 'nonterminal (syntactic category)',
+  'bnf.meta.t': 'terminal (literal text)',
+  'bnf.meta.cat': 'concatenation',
+  'bnf.meta.opt': 'optional: 0 or 1 times',
+  'bnf.meta.rep': 'repetition: 0 or more times',
+  'bnf.meta.group': 'grouping',
+  'bnf.meta.end': 'end of rule',
+  'bnf.meta.b': 'Many tools use a regex-like EBNF instead: <code>x?</code> optional, <code>x*</code> zero or more, <code>x+</code> one or more, and concatenation by juxtaposition (ANTLR, W3C specs, Python\'s grammar).',
+  'bnf.rules': 'From EBNF to BNF',
+  'bnf.rules.b': 'Each EBNF construct is replaced by a new nonterminal &lt;N&gt; with plain BNF rules. Repetition becomes recursion — the only way BNF has to say "many times". So EBNF is more convenient but not more powerful: both describe exactly the context-free languages.',
+  'bnf.col.construct': 'Construct',
+  'bnf.rule.opt': 'Optional [ β ]',
+  'bnf.rule.rep': 'Repetition { β }',
+  'bnf.rule.group': 'Grouping ( β | γ )',
+  'bnf.rule.plus': 'One or more β+',
+  'bnf.examples': 'Examples',
+  'bnf.asGrammar': 'As a grammar (A → α notation)',
+  'bnf.toAmb': 'Derivation trees →',
+  'bnf.toChomsky': 'Check the type →',
+  'bnf.ex.digits.title': 'Unsigned number',
+  'bnf.ex.digits.note': 'BNF has to use recursion (&lt;digit&gt; &lt;number&gt;) for "one or more digits"; EBNF writes it as a digit followed by a repetition.',
+  'bnf.ex.signed.title': 'Integer with optional sign',
+  'bnf.ex.signed.note': 'The optional sign needs a second alternative in BNF; in EBNF it is a single <code>[ … ]</code>. The group <code>( "+" | "-" )</code> inside it avoids naming &lt;sign&gt;.',
+  'bnf.ex.ident.title': 'Identifier',
+  'bnf.ex.ident.note': 'A letter followed by any letters or digits. The BNF version is left-recursive; the EBNF version has no recursion at all.',
+  'bnf.ex.list.title': 'Comma-separated list',
+  'bnf.ex.list.note': 'The pattern <code>x { "," x }</code> — one item, then any number of ", item" — is how separators are written in EBNF.',
+  'bnf.ex.expr.title': 'Arithmetic expression',
+  'bnf.ex.expr.note': 'Precedence comes from the levels expr → term → factor. The left recursion of BNF (left associativity) becomes a repetition in EBNF, which is exactly what a recursive-descent parser implements as a loop.',
+  'bnf.ex.if.title': 'If statement',
+  'bnf.ex.if.note': 'The optional else branch. Both versions are ambiguous for <code>if c then if d then s else t</code> (the "dangling else"); languages fix it with the rule "else belongs to the nearest if".',
+  'theory.bnf': `
+<p><b>BNF</b> (Backus–Naur Form) is a notation for context-free grammars, introduced by John Backus and Peter Naur for the ALGOL 60 report (1960). It is the standard way to describe the <b>syntax</b> of programming languages.</p>
+<p>A BNF rule <span class="formula"><span class="bnf-nt">&lt;A&gt;</span> ::= α | β</span> is exactly the production <span class="formula">A → α | β</span>: nonterminals are written in angle brackets, terminals as literal text (here in quotes), <code>::=</code> reads "is defined as" and <code>|</code> separates alternatives.</p>
+<div class="example"><span class="bnf-nt">&lt;bit&gt;</span> ::= "0" | "1"<br><span class="bnf-nt">&lt;bits&gt;</span> ::= <span class="bnf-nt">&lt;bit&gt;</span> | <span class="bnf-nt">&lt;bit&gt;</span> <span class="bnf-nt">&lt;bits&gt;</span>     ⟺     B → 0 | 1,  S → B | BS</div>
+<h4>EBNF — Extended BNF</h4>
+<p>Proposed by Niklaus Wirth (1977) and standardized as ISO/IEC 14977 (1996). It adds three constructs that remove most auxiliary nonterminals and recursion:</p>
+<ul>
+<li><code>[ α ]</code> — α is <b>optional</b> (0 or 1 times);</li>
+<li><code>{ α }</code> — α is <b>repeated</b> 0 or more times;</li>
+<li><code>( α | β )</code> — <b>grouping</b> of alternatives inside a rule.</li>
+</ul>
+<p>In ISO EBNF nonterminals have no brackets, terminals are quoted, <code>=</code> defines, <code>,</code> concatenates and <code>;</code> ends a rule.</p>
+<div class="example">bits = bit , { bit } ;</div>
+<h4>Good to know</h4>
+<ul>
+<li>BNF, EBNF and the A → α notation all have the <b>same power</b>: they describe the context-free (type 2) languages. EBNF is only shorter.</li>
+<li>Every EBNF rule is turned into BNF by introducing new nonterminals (table below).</li>
+<li>Syntax diagrams (railroad diagrams) draw the same EBNF rules as graphs.</li>
+<li>Context conditions (a variable must be declared, types must match) cannot be written in BNF; they are checked later, by semantic analysis.</li>
+</ul>`,
 };
 
 export type Dict = typeof en;

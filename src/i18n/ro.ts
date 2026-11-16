@@ -439,4 +439,158 @@ E ⇒ <u>E</u>*E ⇒ <u>E</u>+E*E ⇒ a+<u>E</u>*E ⇒ a+a*<u>E</u> ⇒ a+a*a   
 <li>Unele limbaje sunt <b>inerent ambigue</b>: orice gramatică pentru ele este ambiguă, de ex. {a<sup>i</sup>b<sup>j</sup>c<sup>k</sup> | i = j sau j = k}.</li>
 <li>Surse tipice: E → EαE (lipsă de precedență/asociativitate), S → SS, „dangling else” și două moduri de a deriva ε.</li>
 </ul>`,
+  // ierarhia Chomsky
+  'nav.chomsky': 'Ierarhia Chomsky',
+  'home.chomsky': 'Cele patru tipuri de gramatici (0–3), forma producțiilor, câte un exemplu pentru fiecare și un verificator care află tipul oricărei gramatici.',
+  'ex.ch.t3': 'Tip 3 — liniară la dreapta (se termină cu b)',
+  'ex.ch.t2': 'Tip 2 — aⁿbⁿ',
+  'ex.ch.t1': 'Tip 1 — aⁿbⁿcⁿ',
+  'ex.ch.t0': 'Tip 0 — a^(2ⁿ)',
+  'ex.ch.t3left': 'Tip 3 — liniară la stânga (începe cu a)',
+  'ex.ch.mixed': 'Liniară la dreapta și la stânga amestecat (nu e tip 3)',
+  'ex.ch.t2eps': 'Tip 2 cu o ε-producție',
+  'ex.ch.t1eps': 'Tip 1 cu S → ε',
+  'chparse.lhsNoNT': 'membrul stâng „{name}” trebuie să conțină un neterminal',
+  'ch.diagram': 'Clase de limbaje',
+  'ch.diagram.b': 'ℒ<sub>3</sub> ⊊ ℒ<sub>2</sub> ⊊ ℒ<sub>1</sub> ⊊ ℒ<sub>0</sub>: toate incluziunile sunt stricte. Limbajul din dreapta fiecărui inel aparține clasei respective, dar nu și următoarei din interior.',
+  'ch.t0.short': 'Tip 0 — recursiv enumerabile',
+  'ch.t1.short': 'Tip 1 — dependente de context',
+  'ch.t2.short': 'Tip 2 — independente de context',
+  'ch.t3.short': 'Tip 3 — regulate',
+  'ch.t0.diag': 'problema opririi',
+  'ch.t1.diag': 'aⁿbⁿcⁿ',
+  'ch.t2.diag': 'aⁿbⁿ',
+  'ch.t3.diag': 'a*b*',
+  'ch.t0.name': 'Gramatică fără restricții',
+  'ch.t1.name': 'Gramatică dependentă de context',
+  'ch.t2.name': 'Gramatică independentă de context',
+  'ch.t3.name': 'Gramatică regulată',
+  'ch.t0.form': 'α → β, α conține un neterminal',
+  'ch.t1.form': 'α → β, |α| ≤ |β| (sau αAβ → αγβ, γ ≠ ε); S → ε doar dacă S nu apare în niciun membru drept',
+  'ch.t2.form': 'A → β, A ∈ N, β ∈ (N ∪ Σ)*',
+  'ch.t3.form': 'A → aB | a (liniară la dreapta) sau A → Ba | a (liniară la stânga); se permite S → ε',
+  'ch.t0.machine': 'Mașină Turing',
+  'ch.t1.machine': 'Automat liniar mărginit',
+  'ch.t2.machine': 'Automat push-down (cu stivă)',
+  'ch.t3.machine': 'Automat finit',
+  'ch.t0.lang': '{⟨M, w⟩ | M se oprește pe w}',
+  'ch.t1.lang': '{a<sup>n</sup>b<sup>n</sup>c<sup>n</sup> | n ≥ 1}, {ww | w ∈ {a,b}*}',
+  'ch.t2.lang': '{a<sup>n</sup>b<sup>n</sup> | n ≥ 1}, paranteze echilibrate',
+  'ch.t3.lang': 'a*b*, identificatori, numere',
+  'ch.t0.cardLang': 'L(G) = {a<sup>2<sup>n</sup></sup> | n ≥ 1} = {aa, aaaa, a<sup>8</sup>, …}',
+  'ch.t1.cardLang': 'L(G) = {a<sup>n</sup>b<sup>n</sup>c<sup>n</sup> | n ≥ 1}',
+  'ch.t2.cardLang': 'L(G) = {a<sup>n</sup>b<sup>n</sup> | n ≥ 1}',
+  'ch.t3.cardLang': 'L(G) = {a, b}*b — cuvintele peste {a, b} care se termină cu b',
+  'ch.t0.why': 'Nu e de tip 1: <b>CB → E</b> și <b>AE → ε</b> scurtează forma. A și B sunt marcaje de capăt; C merge spre dreapta dublând fiecare a, apoi D se întoarce (sau E încheie cuvântul și îl șterge pe A). Limbajul în sine este dependent de context — gramatica nu.',
+  'ch.t1.why': 'Nu e de tip 2: membrii stângi <b>CB</b>, <b>aB</b>, <b>bB</b>, … au lungime 2 — B devine b doar în <i>contextul</i> a_ sau b_. Toate regulile sunt necontractante, deci e de tip 1.',
+  'ch.t2.why': 'Fiecare membru stâng este un singur neterminal, dar în aSb neterminalul e la mijloc, deci nu e liniară: nu e de tip 3. (aⁿbⁿ nu e regulat — vezi lema de pompare.)',
+  'ch.t3.why': 'Fiecare membru drept este un terminal, urmat eventual de un singur neterminal: liniară la dreapta. Un automat finit cu starea S și o stare finală acceptă același limbaj.',
+  'ch.table': 'Cele patru tipuri pe scurt',
+  'ch.col.type': 'Tip',
+  'ch.col.grammar': 'Gramatică',
+  'ch.col.form': 'Producții',
+  'ch.col.machine': 'Recunoscut de',
+  'ch.col.example': 'Limbaj exemplu',
+  'ch.typeN': 'Tip {n}',
+  'ch.examples': 'Câte un exemplu pentru fiecare tip',
+  'ch.load': 'Deschide în verificator',
+  'ch.derivOf': 'Derivarea lui {w}',
+  'ch.wordsUpTo': 'Cuvinte de lungime ≤ {n}:',
+  'ch.checker': 'De ce tip este gramatica mea?',
+  'ch.checker.b': 'Scrie orice gramatică — membrii stângi pot fi șiruri precum <code>CB</code> sau <code>aB</code>. Verificatorul testează condițiile de la tipul cel mai restrictiv (3) la cel mai general (0) și arată prima producție care o încalcă pe fiecare.',
+  'ch.editor.help': 'Câte o regulă pe linie: <code>S -> aSBC | aBC</code>, <code>CB -> BC</code>. Membrul stâng poate fi orice șir cu cel puțin un neterminal. Neterminalele sunt litere mari (eventual cu indice: <code>A1</code>, <code>X_a</code>); orice alt caracter este terminal. <code>ε</code> / <code>eps</code> pentru cuvântul vid. Simbolul de start este S (sau primul neterminal, sau <code>start: X</code>).',
+  'ch.verdict': 'Gramatica este de tip {n}: {name}.',
+  'ch.linear.right': 'Toate producțiile sunt <b>liniare la dreapta</b> (A → wB sau A → w).',
+  'ch.linear.left': 'Toate producțiile sunt <b>liniare la stânga</b> (A → Bw sau A → w).',
+  'ch.r.startEps': 'o ε-producție a simbolului de start este permisă doar dacă S nu apare în niciun membru drept',
+  'ch.r.contracting': 'membrul drept este mai scurt decât cel stâng (regulă contractantă)',
+  'ch.r.lhs': 'membrul stâng nu este un singur neterminal',
+  'ch.r.notLinear': 'nu e liniară: neterminalul nu e la un capăt sau sunt mai multe',
+  'ch.r.mixed': 'reguli liniare la dreapta amestecate cu reguli liniare la stânga — astfel se pot genera limbaje neregulate',
+  'ch.note.eps': 'Tipul 1 nu e satisfăcut doar din cauza ε-producțiilor. Ele pot fi eliminate (vezi <b>FNC &amp; FNG</b>, pasul 1) cu o gramatică echivalentă, deci limbajul este oricum dependent de context.',
+  'ch.note.lang': 'Acesta este tipul <i>gramaticii</i>. Limbajul generat poate fi de un tip mai restrictiv, dacă există o altă gramatică pentru el.',
+  'ch.gen': 'Cuvinte generate de lungime ≤ {n}',
+  'ch.gen.none': 'niciunul',
+  'ch.gen.truncated': '(căutarea s-a oprit mai devreme — lista poate fi incompletă)',
+  'ch.ownWord': 'Derivează un cuvânt',
+  'ch.ownWord.ph': 'de ex. aabbcc',
+  'ch.ownWord.none': 'Nu s-a găsit nicio derivare pentru <b>{w}</b>.',
+  'theory.chomsky': `
+<p>O gramatică este G = (N, Σ, P, S): neterminale N, terminale Σ, simbol de start S ∈ N și producții <span class="formula">α → β</span> cu α ∈ (N ∪ Σ)*N(N ∪ Σ)* (cel puțin un neterminal în stânga) și β ∈ (N ∪ Σ)*. Chomsky (1956) a clasificat gramaticile după cât de restrânse sunt producțiile:</p>
+<h4>Tip 0 — fără restricții</h4>
+<p>Nicio restricție în afară de cea de mai sus. Generează limbajele <b>recursiv enumerabile</b> (cele acceptate de mașini Turing).</p>
+<div class="example">S → aAb,  aA → aaAb,  A → ε   (aici: aⁿbⁿ, n ≥ 1)</div>
+<h4>Tip 1 — dependente de context</h4>
+<p>Fiecare producție este <b>necontractantă</b>: <span class="formula">|α| ≤ |β|</span>. Formă echivalentă: <span class="formula">αAβ → αγβ</span>, γ ≠ ε — A este rescris în γ doar în contextul α_β. Excepție: S → ε, dacă S nu apare în niciun membru drept.</p>
+<div class="example">S → aSBC | aBC,  CB → BC,  aB → ab,  bB → bb,  bC → bc,  cC → cc   (aⁿbⁿcⁿ)</div>
+<h4>Tip 2 — independente de context</h4>
+<p>Membrul stâng este <b>un singur neterminal</b>: <span class="formula">A → β</span>. A este înlocuit indiferent de vecinii săi.</p>
+<div class="example">S → aSb | ab   (aⁿbⁿ),    E → E+T | T,  T → T*F | F,  F → (E) | a</div>
+<h4>Tip 3 — regulate</h4>
+<p><b>Liniare la dreapta</b>: <span class="formula">A → aB | a</span>, sau <b>liniare la stânga</b>: <span class="formula">A → Ba | a</span> (a ∈ Σ), plus S → ε. Toate regulile trebuie să fie de aceeași parte. Adesea se permite și forma extinsă A → wB | w, w ∈ Σ*; ea generează aceleași limbaje.</p>
+<div class="example">S → aS | bA | b,  A → bA | b   (a*b⁺)</div>
+<h4>De reținut</h4>
+<ul>
+<li>Un <b>limbaj</b> este de tip k dacă <i>o</i> gramatică de tip k îl generează. Clasele formează o ierarhie strictă ℒ<sub>3</sub> ⊊ ℒ<sub>2</sub> ⊊ ℒ<sub>1</sub> ⊊ ℒ<sub>0</sub>.</li>
+<li>Orice gramatică de tip 3 este de tip 2. Gramaticile de tip 2 cu ε-producții nu sunt literal de tip 1, dar ε-producțiile se pot elimina mereu, deci ℒ<sub>2</sub> ⊆ ℒ<sub>1</sub> rămâne adevărat pentru limbaje.</li>
+<li>Apartenența (w ∈ L(G)?) este decidabilă pentru tipurile 1, 2, 3 — la tipul 1 formele propoziționale nu devin mai lungi decât w — și nedecidabilă pentru tipul 0.</li>
+</ul>`,
+  // BNF & EBNF
+  'nav.bnf': 'BNF & EBNF',
+  'home.bnf': 'Notațiile folosite pentru sintaxa limbajelor de programare: metasimboluri, conversia EBNF → BNF și exemple rezolvate.',
+  'bnf.meta': 'Metasimboluri',
+  'bnf.col.meaning': 'Semnificație',
+  'bnf.meta.def': 'se definește ca',
+  'bnf.meta.alt': 'alternativă (sau)',
+  'bnf.meta.nt': 'neterminal (categorie sintactică)',
+  'bnf.meta.t': 'terminal (text literal)',
+  'bnf.meta.cat': 'concatenare',
+  'bnf.meta.opt': 'opțional: de 0 sau 1 ori',
+  'bnf.meta.rep': 'repetiție: de 0 sau mai multe ori',
+  'bnf.meta.group': 'grupare',
+  'bnf.meta.end': 'sfârșitul regulii',
+  'bnf.meta.b': 'Multe unelte folosesc în schimb un EBNF asemănător expresiilor regulate: <code>x?</code> opțional, <code>x*</code> de zero sau mai multe ori, <code>x+</code> de una sau mai multe ori, iar concatenarea prin alăturare (ANTLR, specificațiile W3C, gramatica Python).',
+  'bnf.rules': 'Din EBNF în BNF',
+  'bnf.rules.b': 'Fiecare construcție EBNF se înlocuiește cu un neterminal nou &lt;N&gt; și reguli BNF simple. Repetiția devine recursivitate — singurul mod în care BNF poate spune „de mai multe ori”. Deci EBNF e mai comod, dar nu mai puternic: ambele descriu exact limbajele independente de context.',
+  'bnf.col.construct': 'Construcție',
+  'bnf.rule.opt': 'Opțional [ β ]',
+  'bnf.rule.rep': 'Repetiție { β }',
+  'bnf.rule.group': 'Grupare ( β | γ )',
+  'bnf.rule.plus': 'Una sau mai multe β+',
+  'bnf.examples': 'Exemple',
+  'bnf.asGrammar': 'Ca gramatică (notația A → α)',
+  'bnf.toAmb': 'Arbori de derivare →',
+  'bnf.toChomsky': 'Verifică tipul →',
+  'bnf.ex.digits.title': 'Număr fără semn',
+  'bnf.ex.digits.note': 'BNF trebuie să folosească recursivitatea (&lt;digit&gt; &lt;number&gt;) pentru „una sau mai multe cifre”; EBNF scrie o cifră urmată de o repetiție.',
+  'bnf.ex.signed.title': 'Întreg cu semn opțional',
+  'bnf.ex.signed.note': 'Semnul opțional cere o a doua alternativă în BNF; în EBNF este un singur <code>[ … ]</code>. Gruparea <code>( "+" | "-" )</code> din interior evită numele &lt;sign&gt;.',
+  'bnf.ex.ident.title': 'Identificator',
+  'bnf.ex.ident.note': 'O literă urmată de oricâte litere sau cifre. Varianta BNF este recursivă la stânga; varianta EBNF nu are deloc recursivitate.',
+  'bnf.ex.list.title': 'Listă separată prin virgule',
+  'bnf.ex.list.note': 'Tiparul <code>x { "," x }</code> — un element, apoi oricâte „, element” — este felul în care se scriu separatorii în EBNF.',
+  'bnf.ex.expr.title': 'Expresie aritmetică',
+  'bnf.ex.expr.note': 'Precedența vine din niveluri: expr → term → factor. Recursivitatea stângă din BNF (asociativitate la stânga) devine o repetiție în EBNF, adică exact bucla pe care o implementează un parser recursiv descendent.',
+  'bnf.ex.if.title': 'Instrucțiunea if',
+  'bnf.ex.if.note': 'Ramura else opțională. Ambele variante sunt ambigue pentru <code>if c then if d then s else t</code> („dangling else”); limbajele rezolvă cu regula „else aparține celui mai apropiat if”.',
+  'theory.bnf': `
+<p><b>BNF</b> (Backus–Naur Form) este o notație pentru gramatici independente de context, introdusă de John Backus și Peter Naur pentru raportul ALGOL 60 (1960). Este modul standard de a descrie <b>sintaxa</b> limbajelor de programare.</p>
+<p>O regulă BNF <span class="formula"><span class="bnf-nt">&lt;A&gt;</span> ::= α | β</span> este exact producția <span class="formula">A → α | β</span>: neterminalele se scriu între paranteze unghiulare, terminalele ca text literal (aici între ghilimele), <code>::=</code> se citește „se definește ca”, iar <code>|</code> separă alternativele.</p>
+<div class="example"><span class="bnf-nt">&lt;bit&gt;</span> ::= "0" | "1"<br><span class="bnf-nt">&lt;bits&gt;</span> ::= <span class="bnf-nt">&lt;bit&gt;</span> | <span class="bnf-nt">&lt;bit&gt;</span> <span class="bnf-nt">&lt;bits&gt;</span>     ⟺     B → 0 | 1,  S → B | BS</div>
+<h4>EBNF — BNF extins</h4>
+<p>Propus de Niklaus Wirth (1977) și standardizat ca ISO/IEC 14977 (1996). Adaugă trei construcții care elimină majoritatea neterminalelor auxiliare și a recursivității:</p>
+<ul>
+<li><code>[ α ]</code> — α este <b>opțional</b> (de 0 sau 1 ori);</li>
+<li><code>{ α }</code> — α se <b>repetă</b> de 0 sau mai multe ori;</li>
+<li><code>( α | β )</code> — <b>gruparea</b> unor alternative în interiorul unei reguli.</li>
+</ul>
+<p>În EBNF ISO neterminalele nu au paranteze, terminalele sunt între ghilimele, <code>=</code> definește, <code>,</code> concatenează și <code>;</code> încheie regula.</p>
+<div class="example">bits = bit , { bit } ;</div>
+<h4>De reținut</h4>
+<ul>
+<li>BNF, EBNF și notația A → α au <b>aceeași putere</b>: descriu limbajele independente de context (tip 2). EBNF este doar mai scurt.</li>
+<li>Orice regulă EBNF se transformă în BNF introducând neterminale noi (tabelul de mai jos).</li>
+<li>Diagramele de sintaxă (railroad diagrams) desenează aceleași reguli EBNF ca grafuri.</li>
+<li>Condițiile de context (o variabilă trebuie declarată, tipurile trebuie să se potrivească) nu se pot scrie în BNF; ele se verifică ulterior, la analiza semantică.</li>
+</ul>`,
 };

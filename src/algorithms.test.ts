@@ -7,10 +7,12 @@ import { accepts, allWords } from './automata/simulate';
 import { subsetConstruction } from './automata/subset';
 import { Automaton, EPSILON, hasEpsilon, isComplete, isDeterministic } from './automata/types';
 import { Tree, derivationOf, findAmbiguity, treeKey, treesByYield, treesForWord } from './grammar/ambiguity';
-import { AMB_EXAMPLES, CFG_EXAMPLES, LR_EXAMPLES } from './grammar/examples';
+import { classify, findDerivation, generateWords, parseGeneralGrammar } from './grammar/chomsky';
+import { AMB_EXAMPLES, CFG_EXAMPLES, CHOMSKY_EXAMPLES, LR_EXAMPLES } from './grammar/examples';
 import { eliminateLeftRecursion, isLeftRecursive, leftRecPreconditions } from './grammar/leftrec';
 import { derives, wordsUpTo } from './grammar/membership';
 import { TooLargeError, isCNF, isGNF, normalize } from './grammar/normal';
+import { NOTATION_EXAMPLES } from './grammar/notation';
 import { removeEpsilonAndRenames } from './grammar/simplify';
 import { Grammar, parseGrammar, serializeGrammar } from './grammar/types';
 import { LANGUAGES } from './pumping/languages';
@@ -251,6 +253,65 @@ describe('ambiguity', () => {
     for (const g of randomGrammars.slice(0, 25)) {
       const all = treesByYield(g, 4).get(g.start)!;
       for (const [w, b] of all) expect(treesForWord(g, w).length, w).toBe(b.trees.length);
+    }
+  });
+});
+
+describe('Chomsky hierarchy', () => {
+  const gen = (text: string) => {
+    const r = parseGeneralGrammar(text);
+    if (!r.ok) throw new Error(JSON.stringify(r.errors));
+    return r.grammar;
+  };
+  const byName = (name: string) => gen(CHOMSKY_EXAMPLES.find((e) => e.name === name)!.text);
+
+  it('classifies every example as its name says', () => {
+    const expected: Record<string, number> = {
+      'ex.ch.t3': 3, 'ex.ch.t2': 2, 'ex.ch.t1': 1, 'ex.ch.t0': 0,
+      'ex.ch.t3left': 3, 'ex.ch.mixed': 2, 'ex.ch.t2eps': 2, 'ex.ch.t1eps': 2,
+    };
+    for (const ex of CHOMSKY_EXAMPLES) expect(classify(gen(ex.text)).type, ex.name).toBe(expected[ex.name]);
+    expect(classify(byName('ex.ch.t3')).linear).toBe('right');
+    expect(classify(byName('ex.ch.t3left')).linear).toBe('left');
+    expect(classify(byName('ex.ch.mixed')).checks[3].reason).toBe('ch.r.mixed');
+    expect(classify(byName('ex.ch.t2eps')).onlyEpsilon).toBe(true);
+    // S -> ε with S on no right side does not break type 1
+    expect(classify(byName('ex.ch.t1eps')).checks[1].ok).toBe(true);
+    expect(classify(byName('ex.ch.t2eps')).checks[1].reason).toBe('ch.r.startEps');
+  });
+
+  it('rejects left sides without a nonterminal', () => {
+    const r = parseGeneralGrammar('S -> a\nab -> S');
+    expect(r.ok).toBe(false);
+  });
+
+  it('generates the expected languages', () => {
+    expect(generateWords(byName('ex.ch.t1'), 9).words).toEqual(['abc', 'aabbcc', 'aaabbbccc']);
+    expect(generateWords(byName('ex.ch.t0'), 8).words).toEqual(['aa', 'aaaa', 'aaaaaaaa']);
+    expect(generateWords(byName('ex.ch.t2eps'), 4).words).toEqual(['', 'ab', 'aabb']);
+    expect(generateWords(byName('ex.ch.t3'), 2).words).toEqual(['b', 'ab', 'bb']);
+  });
+
+  it('finds derivations that replay correctly', () => {
+    for (const [name, w] of [['ex.ch.t1', 'aabbcc'], ['ex.ch.t0', 'aaaa'], ['ex.ch.t3', 'abb']] as const) {
+      const d = findDerivation(byName(name), w)!;
+      expect(d.forms.at(-1)!.join('')).toBe(w);
+      d.rules.forEach((r, i) => {
+        const f = d.forms[i];
+        expect(f.slice(d.at[i], d.at[i] + r.lhs.length)).toEqual(r.lhs);
+        expect([...f.slice(0, d.at[i]), ...r.rhs, ...f.slice(d.at[i] + r.lhs.length)]).toEqual(d.forms[i + 1]);
+      });
+    }
+    expect(findDerivation(byName('ex.ch.t1'), 'aabbc')).toBeNull();
+  });
+
+  it('notation examples parse and generate their sample words', () => {
+    for (const ex of NOTATION_EXAMPLES.filter((e) => e.grammar)) {
+      const r = parseGrammar(ex.grammar!);
+      expect(r.ok, ex.key).toBe(true);
+      if (!r.ok) continue;
+      for (const w of ex.yes) expect(derives(r.grammar, [...w]), `${ex.key} ${w}`).toBe(true);
+      for (const w of ex.no) if (w !== 'ε') expect(derives(r.grammar, [...w]), `${ex.key} ${w}`).toBe(false);
     }
   });
 });

@@ -43,9 +43,11 @@ export type GrammarParse = { ok: true; grammar: Grammar } | { ok: false; errors:
 /** Nonterminal names: an uppercase letter, then an optional index (A1, X_a), then primes (S', A''). */
 const NT_PREFIX = /^[A-Z](?:_[A-Za-z0-9]+|[0-9]+)?'*/;
 const NT_RE = new RegExp(`${NT_PREFIX.source}$`);
-const EPSILON_ALIASES = new Set(['', 'ε', 'eps', 'epsilon', 'λ', 'lambda']);
+export const EPSILON_ALIASES = new Set(['', 'ε', 'eps', 'epsilon', 'λ', 'lambda']);
 
 export const isNT = (g: Grammar, s: Sym) => Object.hasOwn(g.prods, s);
+/** True if `s` has the shape of a nonterminal name (independent of any grammar). */
+export const isNTName = (s: Sym) => NT_RE.test(s);
 export const pkey = (lhs: Sym, rhs: Rhs) => `${lhs}→${rhs.join(' ')}`;
 export const prodCount = (g: Grammar) => g.nonterminals.reduce((n, A) => n + g.prods[A].length, 0);
 

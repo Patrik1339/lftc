@@ -226,3 +226,34 @@ tr.hl td { background: var(--hl-row); font-weight: 600; }
 .deriv-arrow { width: 1.2em; color: var(--muted); }
 .deriv-prod { margin-left: auto; font-size: 0.85rem; color: var(--muted); }
 .deriv u.rw { text-decoration-color: var(--accent); text-decoration-thickness: 2px; text-underline-offset: 3px; }
+
+h2 { font-size: 1.3rem; margin: 24px 0 12px; }
+.ch-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr)); gap: 16px; margin-bottom: 16px; }
+.ch-card, .bnf-card { min-width: 0; }
+.ch-card h3 { display: flex; flex-wrap: wrap; gap: 0 6px; }
+.ch-card-lang { font-family: 'Cambria Math', Georgia, serif; font-size: 1.05rem; margin: 0 0 6px; }
+.ch-card .gram-lines { margin-bottom: 8px; }
+.chomsky-diagram { margin: 0; }
+.chomsky-diagram svg { width: 100%; height: auto; display: block; margin: 8px 0; }
+.ch-region { stroke: var(--accent); stroke-width: 1.5; }
+.ch-r0 { fill: var(--card); }
+.ch-r1 { fill: color-mix(in srgb, var(--accent) 8%, var(--card)); }
+.ch-r2 { fill: color-mix(in srgb, var(--accent) 16%, var(--card)); }
+.ch-r3 { fill: color-mix(in srgb, var(--accent) 26%, var(--card)); }
+.ch-label { fill: var(--fg); font-size: 13px; font-weight: 600; }
+.ch-ex { fill: var(--muted); font-size: 13px; font-family: 'Cambria Math', Georgia, serif; }
+.ch-table td { white-space: normal; vertical-align: top; }
+.ch-table td:first-child { white-space: nowrap; }
+.ch-checks { list-style: none; padding: 0; margin: 8px 0; }
+.ch-checks li { padding: 4px 0; border-top: 1px solid var(--border); }
+.ch-checks li:first-child { border-top: none; }
+.ch-checks .p-mark { font-family: 'Cambria Math', Georgia, serif; }
+
+.bnf-code { background: var(--bg); border-radius: 8px; padding: 8px 10px; margin: 4px 0 10px; overflow-x: auto; font-size: 0.88rem; white-space: pre; }
+.bnf-nt { color: var(--accent); font-weight: 600; }
+.bnf-t { color: var(--ok); }
+.bnf-meta { color: var(--bad); font-weight: 600; }
+.bnf-gap { display: inline-block; width: 1.5em; }
+.bnf-rules td { vertical-align: top; }
+.bnf-rules .bnf-code { margin: 0; }
+td code { white-space: nowrap; }

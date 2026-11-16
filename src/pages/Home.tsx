@@ -2,6 +2,8 @@ import { useI18n } from '../i18n';
 import type { PageId } from './common';
 
 const TOPICS: { id: PageId; icon: string; nav: string; desc: string }[] = [
+  { id: 'chomsky', icon: '3⊂2⊂1⊂0', nav: 'nav.chomsky', desc: 'home.chomsky' },
+  { id: 'bnf', icon: '::=', nav: 'nav.bnf', desc: 'home.bnf' },
   { id: 'epsilon', icon: 'ε', nav: 'nav.epsilon', desc: 'home.epsilon' },
   { id: 'nfa', icon: '⇉', nav: 'nav.nfa', desc: 'home.nfa' },
   { id: 'min', icon: '⊟', nav: 'nav.min', desc: 'home.min' },
