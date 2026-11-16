@@ -13,6 +13,7 @@ Interactive study aid for *Limbaje formale și tehnici de compilare* (RO/EN):
 - **FNC & FNG** — ε-productions, renames, unproductive and inaccessible symbols, then Chomsky and Greibach normal form
 - **Recursivitate stângă** — direct and indirect left recursion, with or without ε in the new productions
 - **Ambiguitate** — bounded search for a word with two derivation trees; both trees, both leftmost and both rightmost derivations
+- **Exersează** — multiple-choice quizzes on every topic (rounds of 10, with explanations), plus open-answer exercises generated at random and checked automatically: ε-closures, NFA → DFA, building a DFA or a CFG for a language, minimal DFA size, pumping, Chomsky type, CNF, left recursion, ambiguous words
 
 ```sh
 npm install

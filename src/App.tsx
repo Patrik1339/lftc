@@ -12,9 +12,10 @@ import { LeftRecPage } from './pages/LeftRec';
 import { MinimizePage } from './pages/Minimize';
 import { NormalFormsPage } from './pages/Normal';
 import { NfaToDfaPage } from './pages/NfaToDfa';
+import { PracticePage } from './pages/Practice';
 import { PumpingPage } from './pages/Pumping';
 
-const PAGES: PageId[] = ['home', 'chomsky', 'bnf', 'epsilon', 'nfa', 'min', 'pump', 'cfg', 'lr', 'amb'];
+const PAGES: PageId[] = ['home', 'chomsky', 'bnf', 'epsilon', 'nfa', 'min', 'pump', 'cfg', 'lr', 'amb', 'practice'];
 const pageFromHash = (): PageId => {
   const h = window.location.hash.slice(1) as PageId;
   return PAGES.includes(h) ? h : 'home';
@@ -43,11 +44,11 @@ export function App() {
 
   // On narrow screens the nav scrolls sideways; keep the current page's tab visible.
   useEffect(() => {
-    document.querySelector('nav a.active')?.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+    document.querySelector('nav a.active')?.scrollIntoView({ block: 'nearest', inline: 'center' });
   }, [page]);
 
   const goTo = useCallback((p: PageId, text?: string) => {
-    if (text !== undefined && p !== 'home' && p !== 'pump' && p !== 'bnf') setTexts((old) => ({ ...old, [p]: text }));
+    if (text !== undefined) setTexts((old) => (p in old ? { ...old, [p]: text } : old));
     window.location.hash = p;
     window.scrollTo({ top: 0 });
   }, []);
@@ -67,7 +68,7 @@ export function App() {
         </div>
         <nav>
           {PAGES.map((p) => (
-            <a key={p} href={`#${p}`} className={p === page ? 'active' : undefined}>
+            <a key={p} href={`#${p}`} className={[p === page && 'active', p === 'practice' && 'nav-practice'].filter(Boolean).join(' ') || undefined}>
               {t(`nav.${p}`)}
             </a>
           ))}
@@ -91,6 +92,7 @@ export function App() {
         {page === 'pump' && <PumpingPage />}
         {page === 'cfg' && <NormalFormsPage text={texts.cfg} setText={setText('cfg')} goTo={goTo} />}
         {page === 'lr' && <LeftRecPage text={texts.lr} setText={setText('lr')} goTo={goTo} />}
+        {page === 'practice' && <PracticePage goTo={goTo} />}
         {page === 'amb' && <AmbiguityPage text={texts.amb} setText={setText('amb')} goTo={goTo} />}
       </main>
     </>

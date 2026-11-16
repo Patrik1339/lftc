@@ -46,6 +46,18 @@ export function HomePage({ goTo }: { goTo: (p: PageId) => void }) {
         <p className="hero-sub">{t('app.subtitle')}</p>
         <p className="lead">{t('home.intro')}</p>
       </section>
+      <button className="practice-cta" onClick={() => goTo('practice')}>
+        <span className="practice-cta-icon" aria-hidden>
+          ✎
+        </span>
+        <span className="practice-cta-text">
+          <b>{t('home.practice.title')}</b>
+          <span>{t('home.practice')}</span>
+        </span>
+        <span className="practice-cta-go">
+          {t('home.practice.go')} <span aria-hidden>→</span>
+        </span>
+      </button>
       {GROUPS.map((g) => (
         <section key={g.id} className={`topic-group group-${g.id}`}>
           <div className="group-head">
