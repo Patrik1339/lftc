@@ -15,6 +15,8 @@ import { TooLargeError, isCNF, isGNF, normalize } from './grammar/normal';
 import { NOTATION_EXAMPLES } from './grammar/notation';
 import { removeEpsilonAndRenames } from './grammar/simplify';
 import { Grammar, parseGrammar, serializeGrammar } from './grammar/types';
+import { PDA_EXAMPLES } from './pda/examples';
+import { Pda, cfgToPda, isDeterministicPda, parsePda, pdaAccepts, readPrefix, runPda, serializePda } from './pda/pda';
 import { LANGUAGES } from './pumping/languages';
 import { allSplits, breakingI } from './pumping/pumping';
 
@@ -312,6 +314,99 @@ describe('Chomsky hierarchy', () => {
       if (!r.ok) continue;
       for (const w of ex.yes) expect(derives(r.grammar, [...w]), `${ex.key} ${w}`).toBe(true);
       for (const w of ex.no) if (w !== 'ε') expect(derives(r.grammar, [...w]), `${ex.key} ${w}`).toBe(false);
+    }
+  });
+});
+
+describe('pushdown automata', () => {
+  const pda = (text: string): Pda => {
+    const r = parsePda(text);
+    if (!r.ok) throw new Error(JSON.stringify(r.errors));
+    return r.pda;
+  };
+  const count = (w: string, c: string) => [...w].filter((x) => x === c).length;
+  const rev = (w: string) => [...w].reverse().join('');
+  const LANGS: Record<string, { sigma: string[]; inL: (w: string) => boolean }> = {
+    'ex.pda.anbn': { sigma: ['a', 'b'], inL: (w) => /^a+b+$/.test(w) && count(w, 'a') === count(w, 'b') },
+    'ex.pda.wcw': { sigma: ['a', 'b', 'c'], inL: (w) => /^[ab]*c[ab]*$/.test(w) && w === rev(w) },
+    'ex.pda.wwr': { sigma: ['a', 'b'], inL: (w) => w.length % 2 === 0 && w === rev(w) },
+    'ex.pda.paren': {
+      sigma: ['(', ')'],
+      inL: (w) => {
+        let d = 0;
+        for (const c of w) if ((d += c === '(' ? 1 : -1) < 0) return false;
+        return d === 0;
+      },
+    },
+    'ex.pda.equal': { sigma: ['a', 'b'], inL: (w) => count(w, 'a') === count(w, 'b') },
+    'ex.pda.cfg': { sigma: ['a', 'b'], inL: (w) => /^a*b*$/.test(w) && count(w, 'a') === count(w, 'b') },
+  };
+
+  it('every example accepts exactly its language', () => {
+    for (const ex of PDA_EXAMPLES) {
+      const p = pda(ex.text);
+      const { sigma, inL } = LANGS[ex.name];
+      for (const w of allWords(sigma, 7)) expect(pdaAccepts(p, w), `${ex.name} "${w.join('')}"`).toBe(inL(w.join('')));
+    }
+  });
+
+  it('parses both notations, ε and multi-character stack symbols', () => {
+    const a = pda('start: q0\nstack: Z0\naccept: empty\nq0 a Z0 -> q0 AZ0 | q1 ε\nq0 b A -> q0');
+    expect(a.transitions.map((t) => t.push)).toEqual([['A', 'Z0'], [], []]);
+    expect(a.mode).toBe('empty');
+    const b = pda('start: q0\nstack: Z0\nfinal: q1\nδ(q0, ε, Z0) = {(q1, Z0), (q0, ε)}');
+    expect(b.transitions).toEqual([
+      { from: 'q0', input: '', top: 'Z0', to: 'q1', push: ['Z0'] },
+      { from: 'q0', input: '', top: 'Z0', to: 'q0', push: [] },
+    ]);
+    expect(b.mode).toBe('final');
+    expect(parsePda('start: q0\nq0 a Z -> q0 Z').ok).toBe(false);
+    expect(parsePda('start: q0\nstack: Z\nq0 a ε -> q0 Z').ok).toBe(false);
+    expect(parsePda('start: q0\nstack: Z\nq0 a Z q0 Z').ok).toBe(false);
+  });
+
+  it('serialization round-trips', () => {
+    for (const ex of PDA_EXAMPLES) {
+      const p = pda(ex.text);
+      expect(pda(serializePda(p))).toEqual(p);
+    }
+  });
+
+  it('the accepting path is a valid computation', () => {
+    const p = pda(PDA_EXAMPLES[0].text);
+    const run = runPda(p, [...'aabb']);
+    expect(run.accepted).toBe(true);
+    expect(run.path.map((s) => `${s.config.state}/${s.config.pos}/${s.config.stack.join('')}`)).toEqual(['q0/0/Z', 'q0/1/AZ', 'q0/2/AAZ', 'q1/3/AZ', 'q1/4/Z', 'q2/4/Z']);
+    const bad = runPda(p, [...'aab']);
+    expect(bad.accepted).toBe(false);
+    expect(bad.truncated).toBe(false);
+  });
+
+  it('ε-loops that grow the stack terminate', () => {
+    const p = pda('start: q\nstack: Z\naccept: empty\nq ε Z -> q ZZ\nq a Z -> q ε');
+    const run = runPda(p, [...'ab']);
+    expect(run.accepted).toBe(false);
+    expect(run.truncated).toBe(true);
+  });
+
+  it('determinism', () => {
+    const det = PDA_EXAMPLES.filter((e) => isDeterministicPda(pda(e.text))).map((e) => e.name);
+    expect(det).toEqual(['ex.pda.anbn', 'ex.pda.wcw']);
+  });
+
+  it('readPrefix stops right after the last symbol', () => {
+    const p = pda(PDA_EXAMPLES[0].text);
+    expect(readPrefix(p, [...'aab'])).toEqual({ state: 'q1', pos: 3, stack: ['A', 'Z'] });
+    expect(readPrefix(p, [...'abb'])).toBeNull();
+  });
+
+  it('CFG → PDA accepts the language of the grammar', () => {
+    for (const ex of [...CFG_EXAMPLES, ...AMB_EXAMPLES]) {
+      const g = parseGrammar(ex.text);
+      if (!g.ok || isLeftRecursive(g.grammar)) continue;
+      const p = cfgToPda(g.grammar);
+      const ref = new Set(wordsUpTo(g.grammar, 5));
+      for (const w of allWords(g.grammar.terminals, 5)) expect(pdaAccepts(p, w), `${ex.name} "${w.join('')}"`).toBe(ref.has(w.join('')));
     }
   });
 });

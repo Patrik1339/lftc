@@ -1,13 +1,15 @@
-import { useEffect, useMemo, useState } from 'react';
-import { AutomatonView } from '../components/AutomatonView';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import type { DotPalette } from '../automata/dot';
+import { AutomatonView, GraphvizView } from '../components/AutomatonView';
 import { GrammarBox } from '../components/GrammarView';
 import { formHtml, rulesByLhs } from '../grammar/chomsky';
 import { Html, useI18n } from '../i18n';
+import { pdaToDot } from '../pda/pda';
 import { EXERCISES, Exercise, ExerciseType, Feedback } from '../practice/exercises';
 import { QUESTIONS, Question } from '../practice/quiz';
 import type { PageId } from './common';
 
-const TOPICS: PageId[] = ['chomsky', 'bnf', 'epsilon', 'nfa', 'min', 'pump', 'cfg', 'lr', 'amb'];
+const TOPICS: PageId[] = ['chomsky', 'bnf', 'epsilon', 'nfa', 'min', 'pump', 'cfg', 'lr', 'amb', 'pda'];
 const ROUND = 10;
 
 const shuffle = <T,>(xs: T[]): T[] => {
@@ -233,6 +235,7 @@ function ExerciseRunner({ type, onSolved, goTo }: { type: ExerciseType; onSolved
   useEffect(() => setFb(null), [answer]);
 
   const general = useMemo(() => (ex.general ? rulesByLhs(ex.general) : null), [ex]);
+  const pdaDot = useCallback((pal: DotPalette) => (ex.pda ? pdaToDot(ex.pda, {}, pal) : ''), [ex]);
   const multiline = ex.input !== 'line';
 
   return (
@@ -246,6 +249,7 @@ function ExerciseRunner({ type, onSolved, goTo }: { type: ExerciseType; onSolved
       </div>
       <Html as="p" className="ex-prompt" html={ex.prompt[lang]} />
       {ex.automaton && <AutomatonView automaton={ex.automaton} />}
+      {ex.pda && <GraphvizView makeDot={pdaDot} />}
       {ex.grammar && <GrammarBox view={{ grammar: ex.grammar }} />}
       {general && (
         <figure className="graph gram">
@@ -287,7 +291,7 @@ function ExerciseRunner({ type, onSolved, goTo }: { type: ExerciseType; onSolved
           />
         )}
       </label>
-      {multiline && <Html as="p" className="muted small" html={t(ex.input === 'automaton' ? 'editor.help' : 'geditor.help')} />}
+      {multiline && <Html as="p" className="muted small" html={t(ex.input === 'automaton' ? 'editor.help' : ex.input === 'pda' ? 'pda.editor.help' : 'geditor.help')} />}
       <div className="actions ex-actions">
         <button className="primary" onClick={check} disabled={!answer.trim()}>{t('pr.check')}</button>
         <button onClick={() => setShowSol(!showSol)}>{showSol ? t('pr.hideSolution') : t('pr.showSolution')}</button>

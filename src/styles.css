@@ -680,3 +680,16 @@ nav a.nav-practice { color: var(--accent-text); font-weight: 600; }
 .solution { padding: 14px 16px; border-radius: 12px; background: var(--surface-2); border: 1px dashed var(--border-strong); }
 .solution p { margin: 4px 0 8px; }
 .solution pre { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 10px 12px; margin: 0 0 10px; overflow-x: auto; }
+
+/* Pushdown automata */
+.pda-tuple { margin-bottom: 18px; }
+.pda-tuple p { margin: 0; overflow-wrap: anywhere; }
+.pda-badges { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px !important; }
+.pda-config { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 18px; align-items: start; padding: 12px; border: 1px solid var(--border); border-radius: 12px; background: var(--surface-2); }
+.letter.read { color: var(--muted); opacity: 0.55; }
+.letter.head { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-soft); background: var(--card); font-weight: 700; }
+.pda-stack { display: flex; flex-direction: column; align-items: stretch; min-width: 64px; padding: 4px 6px 6px; border: 2px solid var(--border-strong); border-top: none; border-radius: 0 0 10px 10px; gap: 3px; }
+.pda-cell { font-family: var(--mono); text-align: center; padding: 4px 10px; border: 1px solid var(--border); border-radius: 6px; background: var(--card); }
+.pda-cell.top { border-color: var(--accent); background: var(--accent-soft); color: var(--accent-text); font-weight: 700; }
+.pda-run tbody tr { cursor: pointer; }
+@media (max-width: 560px) { .pda-config { grid-template-columns: minmax(0, 1fr); } }

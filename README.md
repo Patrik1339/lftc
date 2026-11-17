@@ -13,7 +13,8 @@ Interactive study aid for *Limbaje formale și tehnici de compilare* (RO/EN):
 - **FNC & FNG** — ε-productions, renames, unproductive and inaccessible symbols, then Chomsky and Greibach normal form
 - **Recursivitate stângă** — direct and indirect left recursion, with or without ε in the new productions
 - **Ambiguitate** — bounded search for a word with two derivation trees; both trees, both leftmost and both rightmost derivations
-- **Exersează** — multiple-choice quizzes on every topic (rounds of 10, with explanations), plus open-answer exercises generated at random and checked automatically: ε-closures, NFA → DFA, building a DFA or a CFG for a language, minimal DFA size, pumping, Chomsky type, CNF, left recursion, ambiguous words
+- **Automate push-down** — run a PDA on any word (BFS over configurations, shortest accepting computation, the stack at every move), acceptance by final state or empty stack, determinism check, CFG → PDA construction
+- **Exersează** — multiple-choice quizzes on every topic (rounds of 10, with explanations), plus open-answer exercises generated at random and checked automatically: ε-closures, NFA → DFA, building a DFA or a CFG for a language, minimal DFA size, pumping, Chomsky type, CNF, left recursion, ambiguous words, building a PDA, tracing a PDA's stack, CFG → PDA
 
 ```sh
 npm install
@@ -29,6 +30,16 @@ start: q0
 final: q2
 q0 a q0 q1
 q0 ε q2      # ε / eps / ε for the empty word
+```
+
+Pushdown automaton text format:
+
+```
+start: q0
+stack: Z              # initial stack symbol
+final: q2             # or: accept: empty
+q0 a Z -> q0 AZ       # state input top -> state push (leftmost = new top)
+q1 ε Z -> q2 Z | q1 ε # alternatives; δ(q1, ε, Z) = {(q2, Z), (q1, ε)} also works
 ```
 
 Grammar text format:

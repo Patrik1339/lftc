@@ -10,6 +10,7 @@ import { derives, wordsUpTo } from '../grammar/membership';
 import { isCNF, normalize } from '../grammar/normal';
 import { Grammar, parseGrammar, serializeGrammar } from '../grammar/types';
 import type { PageId } from '../pages/common';
+import { Pda, cfgToPda, parsePda, pdaAccepts, readPrefix, serializePda, stackText } from '../pda/pda';
 import { LANGUAGES, Lang } from '../pumping/languages';
 import { Split, allSplits, breakingI, pump } from '../pumping/pumping';
 
@@ -30,9 +31,10 @@ export interface Exercise {
   automaton?: Automaton;
   grammar?: Grammar;
   general?: GeneralGrammar;
+  pda?: Pda;
   /** w = xyz with x, y, z colored. */
   split?: Split;
-  input: 'automaton' | 'grammar' | 'line';
+  input: 'automaton' | 'pda' | 'grammar' | 'line';
   placeholder?: string;
   check: (answer: string) => Feedback;
   solution: L;
@@ -127,6 +129,33 @@ const wordSet = (alphabet: string[], n: number, inL: (w: string) => boolean) => 
   for (const w of allWords(alphabet, n)) if (inL(w.join(''))) out.add(w.join(''));
   return out;
 };
+
+const parseP = (text: string): Pda => {
+  const r = parsePda(text);
+  if (!r.ok) throw new Error(JSON.stringify(r.errors));
+  return r.pda;
+};
+
+/** Compares a typed PDA with a reference language on every word of length ≤ maxLen. */
+function checkPda(answer: string, alphabet: string[], maxLen: number, ref: (w: string[]) => boolean): Feedback {
+  const r = parsePda(answer);
+  if (!r.ok) return { ok: false, msg: syntaxError, errors: r.errors };
+  const p = r.pda;
+  const sigma = [...new Set([...alphabet, ...p.inputAlphabet])];
+  const cx = counterexample(sigma, maxLen, ref, (w) => pdaAccepts(p, w, { maxConfigs: 5000 }));
+  if (!cx)
+    return {
+      ok: true,
+      msg: l(`Corect! (verificat pe toate cuvintele de lungime ≤ ${maxLen})`, `Correct! (checked on every word of length ≤ ${maxLen})`),
+    };
+  const w = `<b class="mono">${shown(cx.word)}</b>`;
+  return {
+    ok: false,
+    msg: cx.shouldAccept
+      ? l(`Automatul tău respinge cuvântul ${w}, care ar trebui acceptat.`, `Your automaton rejects ${w}, which should be accepted.`)
+      : l(`Automatul tău acceptă cuvântul ${w}, care ar trebui respins.`, `Your automaton accepts ${w}, which should be rejected.`),
+  };
+}
 
 // ---------------------------------------------------------------- random automata
 
@@ -272,6 +301,72 @@ const AMB_TASKS = [
   'S -> SaS | b',
   'S -> aSb | aaSb | ε',
 ];
+
+const count = (w: string, c: string) => [...w].filter((x) => x === c).length;
+const PUSH_AB = 'q0 a Z -> q0 AZ\nq0 a A -> q0 AA\nq0 a B -> q0 AB\nq0 b Z -> q0 BZ\nq0 b A -> q0 BA\nq0 b B -> q0 BB';
+
+const PDA_TASKS: { label: L; alphabet: string[]; inL: (w: string) => boolean; solution: string }[] = [
+  {
+    label: l('L = { a<sup>n</sup>b<sup>n</sup> | n ≥ 0 }', 'L = { a<sup>n</sup>b<sup>n</sup> | n ≥ 0 }'),
+    alphabet: ['a', 'b'],
+    inL: (w) => /^a*b*$/.test(w) && count(w, 'a') === count(w, 'b'),
+    solution: 'start: q0\nstack: Z\nfinal: q2\nq0 a Z -> q0 AZ\nq0 a A -> q0 AA\nq0 b A -> q1 ε\nq1 b A -> q1 ε\nq1 ε Z -> q2 Z\nq0 ε Z -> q2 Z',
+  },
+  {
+    label: l('L = { a<sup>n</sup>b<sup>2n</sup> | n ≥ 0 }', 'L = { a<sup>n</sup>b<sup>2n</sup> | n ≥ 0 }'),
+    alphabet: ['a', 'b'],
+    inL: (w) => /^a*b*$/.test(w) && 2 * count(w, 'a') === count(w, 'b'),
+    solution: 'start: q0\nstack: Z\nfinal: q2\nq0 a Z -> q0 AAZ\nq0 a A -> q0 AAA\nq0 b A -> q1 ε\nq1 b A -> q1 ε\nq1 ε Z -> q2 Z\nq0 ε Z -> q2 Z',
+  },
+  {
+    label: l('L = { a<sup>n</sup>b<sup>m</sup> | 0 ≤ n ≤ m }', 'L = { a<sup>n</sup>b<sup>m</sup> | 0 ≤ n ≤ m }'),
+    alphabet: ['a', 'b'],
+    inL: (w) => /^a*b*$/.test(w) && count(w, 'a') <= count(w, 'b'),
+    solution: 'start: q0\nstack: Z\nfinal: q2\nq0 a Z -> q0 AZ\nq0 a A -> q0 AA\nq0 b A -> q1 ε\nq0 b Z -> q1 Z\nq1 b A -> q1 ε\nq1 b Z -> q1 Z\nq1 ε Z -> q2 Z\nq0 ε Z -> q2 Z',
+  },
+  {
+    label: l('L = { w c w<sup>R</sup> | w ∈ {a, b}* }', 'L = { w c w<sup>R</sup> | w ∈ {a, b}* }'),
+    alphabet: ['a', 'b', 'c'],
+    inL: (w) => /^[ab]*c[ab]*$/.test(w) && w === [...w].reverse().join(''),
+    solution: `start: q0\nstack: Z\naccept: empty\n${PUSH_AB}\nq0 c Z -> q1 Z\nq0 c A -> q1 A\nq0 c B -> q1 B\nq1 a A -> q1 ε\nq1 b B -> q1 ε\nq1 ε Z -> q1 ε`,
+  },
+  {
+    label: l('L = { w w<sup>R</sup> | w ∈ {a, b}* } (palindroamele de lungime pară)', 'L = { w w<sup>R</sup> | w ∈ {a, b}* } (even-length palindromes)'),
+    alphabet: ['a', 'b'],
+    inL: (w) => w.length % 2 === 0 && w === [...w].reverse().join(''),
+    solution: `start: q0\nstack: Z\naccept: empty\n${PUSH_AB}\nq0 ε Z -> q1 Z\nq0 ε A -> q1 A\nq0 ε B -> q1 B\nq1 a A -> q1 ε\nq1 b B -> q1 ε\nq1 ε Z -> q1 ε`,
+  },
+  {
+    label: l('cuvintele peste {a, b} cu tot atâția a câți b', 'words over {a, b} with as many a as b'),
+    alphabet: ['a', 'b'],
+    inL: (w) => count(w, 'a') === count(w, 'b'),
+    solution: 'start: q0\nstack: Z\nfinal: q1\nq0 a Z -> q0 AZ\nq0 a A -> q0 AA\nq0 a B -> q0 ε\nq0 b Z -> q0 BZ\nq0 b B -> q0 BB\nq0 b A -> q0 ε\nq0 ε Z -> q1 Z',
+  },
+  {
+    label: l('parantezele echilibrate peste { (, ) }', 'balanced parentheses over { (, ) }'),
+    alphabet: ['(', ')'],
+    inL: (w) => {
+      let d = 0;
+      for (const c of w) if ((d += c === '(' ? 1 : -1) < 0) return false;
+      return d === 0;
+    },
+    solution: 'start: q\nstack: Z\naccept: empty\nq ( Z -> q XZ\nq ( X -> q XX\nq ) X -> q ε\nq ε Z -> q ε',
+  },
+];
+
+/** Deterministic PDAs for "what is on the stack": no ε-move competes with a move on input. */
+const PDA_STACK_TASKS: { pda: string; alphabet: string[] }[] = [
+  { pda: 'start: q0\nstack: Z\nfinal: q2\nq0 a Z -> q0 AZ\nq0 a A -> q0 AA\nq0 b A -> q1 ε\nq1 b A -> q1 ε\nq1 ε Z -> q2 Z', alphabet: ['a', 'b'] },
+  { pda: 'start: q0\nstack: Z\nfinal: q2\nq0 a Z -> q0 AAZ\nq0 a A -> q0 AAA\nq0 b A -> q1 ε\nq1 b A -> q1 ε\nq1 ε Z -> q2 Z', alphabet: ['a', 'b'] },
+  {
+    pda: `start: q0\nstack: Z\naccept: empty\n${PUSH_AB}\nq0 c Z -> q1 Z\nq0 c A -> q1 A\nq0 c B -> q1 B\nq1 a A -> q1 ε\nq1 b B -> q1 ε\nq1 ε Z -> q1 ε`,
+    alphabet: ['a', 'b', 'c'],
+  },
+  // { w c | w has as many a as b }: the stack holds the surplus, X…X (more a) or Y…Y (more b).
+  { pda: 'start: q\nstack: Z\nfinal: f\nq a Z -> q XZ\nq a X -> q XX\nq a Y -> q ε\nq b Z -> q YZ\nq b Y -> q YY\nq b X -> q ε\nq c Z -> f Z', alphabet: ['a', 'b'] },
+];
+
+const CFG_PDA_TASKS = ['S -> aSb | ab', 'S -> aSa | bSb | c', 'S -> aSbb | ε', 'S -> AB\nA -> aA | a\nB -> bB | b', 'S -> aB | bA\nA -> a | aS\nB -> b | bS', 'S -> (S)S | ε'];
 
 // ---------------------------------------------------------------- exercise types
 
@@ -637,4 +732,99 @@ const ambiguousWord: ExerciseType = {
   },
 };
 
-export const EXERCISES: ExerciseType[] = [chomskyType, epsClosure, nfaToDfa, designDfa, minCount, pumpI, designCfg, cnf, leftRec, ambiguousWord];
+const designPda: ExerciseType = {
+  id: 'design-pda',
+  topic: 'pda',
+  title: l('Construiește un automat push-down', 'Build a pushdown automaton'),
+  desc: l('Un APD (stări finale sau stivă vidă) pentru un limbaj dat.', 'A PDA (final state or empty stack) for a given language.'),
+  make() {
+    const task = pick(PDA_TASKS);
+    return {
+      prompt: l(
+        `Scrie un <b>automat push-down</b> care acceptă ${task.label.ro}. Poți accepta prin stări finale (<code>final: …</code>) sau prin vidarea stivei (<code>accept: empty</code>).`,
+        `Write a <b>pushdown automaton</b> accepting ${task.label.en}. You can accept by final state (<code>final: …</code>) or by empty stack (<code>accept: empty</code>).`,
+      ),
+      input: 'pda',
+      placeholder: 'start: q0\nstack: Z\nfinal: q2\nq0 a Z -> q0 AZ\n…',
+      check: (answer) => checkPda(answer, task.alphabet, 7, (w) => task.inL(w.join(''))),
+      solution: l('O soluție posibilă:', 'One possible solution:'),
+      solutionText: task.solution,
+      open: { page: 'pda', text: task.solution },
+    };
+  },
+};
+
+const pdaStack: ExerciseType = {
+  id: 'pda-stack',
+  topic: 'pda',
+  title: l('Ce este pe stivă?', "What's on the stack?"),
+  desc: l('Urmărește un APD determinist pe un cuvânt.', 'Trace a deterministic PDA on a word.'),
+  make() {
+    const [task, word, c] = until(
+      () => {
+        const task = pick(PDA_STACK_TASKS);
+        const word = Array.from({ length: 3 + rand(4) }, () => pick(task.alphabet));
+        return [task, word, readPrefix(parseP(task.pda), word)] as const;
+      },
+      ([, , c]) => c !== null && c.stack.length >= 2,
+    );
+    const p = parseP(task.pda);
+    const want = c!.stack.join('');
+    const w = word.join('');
+    return {
+      prompt: l(
+        `Pornind din configurația inițială (${p.start}, ${esc(w)}, ${p.startStack}), ce conține <b>stiva</b> imediat după ce automatul de mai jos citește ultimul simbol din <b class="mono">${esc(w)}</b>? Scrie simbolurile de la vârf spre bază (de ex. <code>AAZ</code>).`,
+        `Starting from the initial configuration (${p.start}, ${esc(w)}, ${p.startStack}), what is on the <b>stack</b> right after the automaton below reads the last symbol of <b class="mono">${esc(w)}</b>? Write the symbols from top to bottom (e.g. <code>AAZ</code>).`,
+      ),
+      pda: p,
+      input: 'line',
+      placeholder: 'AAZ',
+      check(answer) {
+        const got = answer.replace(/[\s,]+/g, '').replace(/^(ε|eps)$/, '');
+        if (got === want) return { ok: true, msg: l('Corect!', 'Correct!') };
+        if (got.length !== want.length)
+          return {
+            ok: false,
+            msg: l(
+              `Stiva are ${want.length} simboluri, nu ${[...got].length}. Fiecare mișcare înlocuiește vârful cu șirul din tranziție.`,
+              `The stack has ${want.length} symbols, not ${[...got].length}. Every move replaces the top by the string of the transition.`,
+            ),
+          };
+        return { ok: false, msg: l('Simbolurile sau ordinea nu sunt corecte (vârful se scrie primul).', 'The symbols or their order are wrong (the top comes first).') };
+      },
+      solution: l(
+        `Configurația este (${c!.state}, ε, <b class="mono">${esc(stackText(c!.stack))}</b>).`,
+        `The configuration is (${c!.state}, ε, <b class="mono">${esc(stackText(c!.stack))}</b>).`,
+      ),
+      open: { page: 'pda', text: task.pda },
+    };
+  },
+};
+
+const cfgPda: ExerciseType = {
+  id: 'cfg-pda',
+  topic: 'pda',
+  title: l('De la gramatică la APD', 'From a grammar to a PDA'),
+  desc: l('Un automat push-down care acceptă limbajul unei gramatici.', 'A pushdown automaton accepting the language of a grammar.'),
+  make() {
+    const text = pick(CFG_PDA_TASKS);
+    const g = parseG(text);
+    const ref = new Set(wordsUpTo(g, 6));
+    const sol = serializePda(cfgToPda(g));
+    return {
+      prompt: l(
+        'Scrie un <b>automat push-down</b> care acceptă limbajul generat de gramatica de mai jos (de exemplu cu construcția expandare/potrivire, prin vidarea stivei).',
+        'Write a <b>pushdown automaton</b> accepting the language generated by the grammar below (for example with the expand/match construction, by empty stack).',
+      ),
+      grammar: g,
+      input: 'pda',
+      placeholder: 'start: q\nstack: S\naccept: empty\nq ε S -> q …',
+      check: (answer) => checkPda(answer, g.terminals, 6, (w) => ref.has(w.join(''))),
+      solution: l('Construcția standard (o stare, stivă vidă) dă:', 'The standard construction (one state, empty stack) gives:'),
+      solutionText: sol,
+      open: { page: 'pda', text: sol },
+    };
+  },
+};
+
+export const EXERCISES: ExerciseType[] = [chomskyType, epsClosure, nfaToDfa, designDfa, minCount, pumpI, designCfg, cnf, leftRec, ambiguousWord, designPda, pdaStack, cfgPda];

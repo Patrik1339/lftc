@@ -45,7 +45,7 @@ export const ro: Dict = {
   'pr.open': 'Vezi pas cu pas pe „{page}”',
   'home.badge': 'Ghid interactiv de studiu',
   'home.groupGrammar': 'Gramatici',
-  'home.groupGrammarDesc': 'Clasificare, notații, forme normale și ambiguitatea gramaticilor independente de context.',
+  'home.groupGrammarDesc': 'Clasificare, notații, forme normale și ambiguitatea gramaticilor independente de context, plus automatele push-down care le acceptă.',
   'home.groupAutomata': 'Automate finite și limbaje regulate',
   'home.groupAutomataDesc': 'De la AFN-ε la AFD-ul minimal și demonstrația că un limbaj nu este regulat.',
   'home.open': 'Deschide',
@@ -628,5 +628,73 @@ E ⇒ <u>E</u>*E ⇒ <u>E</u>+E*E ⇒ a+<u>E</u>*E ⇒ a+a*<u>E</u> ⇒ a+a*a   
 <li>Orice regulă EBNF se transformă în BNF introducând neterminale noi (tabelul de mai jos).</li>
 <li>Diagramele de sintaxă (railroad diagrams) desenează aceleași reguli EBNF ca grafuri.</li>
 <li>Condițiile de context (o variabilă trebuie declarată, tipurile trebuie să se potrivească) nu se pot scrie în BNF; ele se verifică ulterior, la analiza semantică.</li>
+</ul>`,
+  // Automate push-down
+  'nav.pda': 'Automate push-down',
+  'home.pda': 'Rulează un automat push-down pe orice cuvânt: configurații, stiva la fiecare mișcare, acceptare prin stări finale sau prin vidarea stivei și construcția GIC → APD.',
+  'ex.pda.anbn': 'aⁿbⁿ (stare finală)',
+  'ex.pda.wcw': 'w c wᴿ (determinist, stivă vidă)',
+  'ex.pda.wwr': 'w wᴿ (nedeterminist)',
+  'ex.pda.paren': 'Paranteze echilibrate',
+  'ex.pda.equal': 'Tot atâția a câți b',
+  'ex.pda.cfg': 'Din gramatica S → aSb | ε',
+  'pda.editor.title': 'Automat push-down',
+  'pda.editor.help': 'Format: <code>start: q0</code>, <code>stack: Z</code> (simbolul inițial al stivei), <code>final: q2</code> sau <code>accept: empty</code>, apoi câte o linie pe tranziție: <code>q0 a Z -> q0 AZ</code> (stare, intrare, vârf → stare, șirul pus pe stivă; simbolul cel mai din stânga devine noul vârf). <code>ε</code> nu citește nimic sau nu pune nimic; <code>|</code> separă alternativele. Se acceptă și notația <code>δ(q0, a, Z) = {(q0, AZ)}</code>.',
+  'pda.parse.oneStack': 'este necesar exact un simbol inițial al stivei',
+  'pda.parse.badMode': 'acceptarea este „final” sau „empty”',
+  'pda.parse.unknownHeader': 'antet necunoscut „{name}” (folosește start:, stack:, final: sau accept:)',
+  'pda.parse.badTransition': 'o tranziție se scrie: stare intrare vârf -> stare șir',
+  'pda.parse.epsTop': 'fiecare mișcare citește (și înlocuiește) vârful stivei, deci vârful nu poate fi ε',
+  'pda.parse.empty': 'automatul nu are tranziții',
+  'pda.parse.noStack': 'lipsește linia „stack: Z” (simbolul inițial al stivei)',
+  'pda.word': 'Cuvântul de rulat',
+  'pda.mode.final': 'acceptă prin stări finale',
+  'pda.mode.empty': 'acceptă prin vidarea stivei',
+  'pda.det': 'determinist',
+  'pda.nondet': 'nedeterminist',
+  'pda.tape': 'Intrare',
+  'pda.stack': 'Stiva (vârful primul)',
+  'pda.stack.empty': 'vidă',
+  'pda.diagram': 'Diagrama de stări — arce etichetate „intrare, vârf / șir pus”',
+  'pda.accepted': '✓ <b>{w}</b> este acceptat: mai jos este o calculație de acceptare cu {n} mișcări (cea mai scurtă).',
+  'pda.rejected': '✗ <b>{w}</b> este respins: nicio calculație nu îl acceptă ({n} configurații explorate). Mai jos este o calculație care citește cel mai lung prefix, <b>{read}</b>, înainte să se blocheze.',
+  'pda.rejected.limit': '✗ Nu s-a găsit o calculație de acceptare pentru <b>{w}</b> în limitele căutării ({n} configurații). Mai jos este calculația care citește cel mai lung prefix, <b>{read}</b>.',
+  'pda.initial': 'Configurația inițială',
+  'pda.initial.b': 'Automatul este în starea inițială, nu s-a citit nimic, iar stiva conține doar Z<sub>0</sub>.',
+  'pda.move.read': 'Citește <b>{a}</b> cu <b>{Z}</b> în vârf: scoate {Z} și pune <b>{push}</b>.',
+  'pda.move.eps': 'ε-mișcare (nu citește nimic) cu <b>{Z}</b> în vârf: scoate {Z} și pune <b>{push}</b>.',
+  'pda.computation': 'Calculația de acceptare (q, intrare rămasă, stivă)',
+  'pda.computation.partial': 'Calculația până în punctul în care se blochează',
+  'pda.col.input': 'Intrare rămasă',
+  'pda.col.stack': 'Stivă',
+  'pda.col.via': 'Tranziția folosită',
+  'pda.limits': 'Nedeterminismul este explorat în lățime (toate alegerile în paralel), cu stiva limitată la 2·|w| + 10 simboluri. Apasă pe un rând ca să sari la el.',
+  'pda.cfg': 'De la gramatică la automat push-down',
+  'pda.cfg.b': 'Pentru G = (N, Σ, S, P) construim un APD cu o singură stare q și Z<sub>0</sub> = S, care acceptă L(G) prin vidarea stivei: δ(q, ε, A) ∋ (q, α) pentru fiecare producție A → α (<b>expandare</b>) și δ(q, a, a) = {(q, ε)} pentru fiecare terminal a (<b>potrivire</b>). Calculațiile lui urmează derivările stângi din G.',
+  'pda.cfg.result': 'Automatul push-down',
+  'pda.cfg.load': 'Încarcă în editor',
+  'theory.pda': `
+<p>Un <b>automat push-down</b> (APD) este un automat finit cu o memorie suplimentară: o <b>stivă</b>. Formal P = (Q, Σ, Γ, δ, q<sub>0</sub>, Z<sub>0</sub>, F), unde Γ este alfabetul stivei, Z<sub>0</sub> ∈ Γ simbolul inițial al stivei și</p>
+<p class="formula">δ : Q × (Σ ∪ {ε}) × Γ → submulțimi finite ale lui Q × Γ*</p>
+<p>(p, γ) ∈ δ(q, a, Z) înseamnă: în starea q, citind a (sau nimic, dacă a = ε) cu Z în vârf, trece în p și înlocuiește Z cu γ (primul simbol din γ devine noul vârf; γ = ε îl scoate pe Z).</p>
+<p>O <b>configurație</b> este (q, w, α): starea curentă, intrarea necitită, conținutul stivei (vârful în stânga). O mișcare:</p>
+<p class="formula">(q, aw, Zα) ⊢ (p, w, γα)   dacă (p, γ) ∈ δ(q, a, Z)</p>
+<h4>Acceptare</h4>
+<ul>
+<li>prin <b>stări finale</b>: L(P) = { w | (q<sub>0</sub>, w, Z<sub>0</sub>) ⊢* (p, ε, α), p ∈ F };</li>
+<li>prin <b>vidarea stivei</b>: N(P) = { w | (q<sub>0</sub>, w, Z<sub>0</sub>) ⊢* (p, ε, ε) }.</li>
+</ul>
+<p>Cele două sunt echivalente: orice limbaj acceptat într-un fel este acceptat în celălalt de un alt APD.</p>
+<h4>Exemplu: L = { a<sup>n</sup>b<sup>n</sup> | n ≥ 1 }</h4>
+<div class="example">δ(q0, a, Z) = {(q0, AZ)},&nbsp;&nbsp; δ(q0, a, A) = {(q0, AA)}<br>
+δ(q0, b, A) = {(q1, ε)},&nbsp;&nbsp; δ(q1, b, A) = {(q1, ε)}<br>
+δ(q1, ε, Z) = {(q2, Z)},   F = {q2}<br><br>
+(q0, aabb, Z) ⊢ (q0, abb, AZ) ⊢ (q0, bb, AAZ) ⊢ (q1, b, AZ) ⊢ (q1, ε, Z) ⊢ (q2, ε, Z) ✓</div>
+<h4>De reținut</h4>
+<ul>
+<li>APD-urile acceptă exact <b>limbajele independente de context</b> (tip 2): GIC → APD prin construcția expandare/potrivire (jos în pagină), APD → GIC prin construcția cu triplete [pXq].</li>
+<li>Nedeterminismul contează: APD-urile <b>deterministe</b> acceptă o subclasă strictă (de ex. w c w<sup>R</sup> este determinist, w w<sup>R</sup> nu). Analizoarele LR sunt APD-uri deterministe.</li>
+<li>Fiecare mișcare scoate vârful; ca să „lași stiva neschimbată” pune-l la loc (Z → Z), ca să pui X deasupra scrie XZ.</li>
+<li>{a<sup>n</sup>b<sup>n</sup>c<sup>n</sup>} nu este independent de context: o singură stivă nu poate compara trei numărători.</li>
 </ul>`,
 };

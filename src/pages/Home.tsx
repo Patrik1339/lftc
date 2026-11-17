@@ -32,6 +32,7 @@ const GROUPS: { id: 'grammar' | 'automata'; title: string; desc: string; flow: s
       { id: 'cfg', icon: 'A→BC', nav: 'nav.cfg', desc: 'home.cfg' },
       { id: 'lr', icon: 'A→Aα', nav: 'nav.lr', desc: 'home.lr' },
       { id: 'amb', icon: '⋀ ≠ ⋀', nav: 'nav.amb', desc: 'home.amb' },
+      { id: 'pda', icon: '⊢ Zα', nav: 'nav.pda', desc: 'home.pda' },
     ],
   },
 ];

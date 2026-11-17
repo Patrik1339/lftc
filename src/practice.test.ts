@@ -107,6 +107,28 @@ describe('practice exercises', () => {
   });
 });
 
+describe('pushdown automaton exercises', () => {
+  it('a wrong PDA gets a counterexample, a syntax error gets parse errors', () => {
+    for (let k = 0; k < RUNS; k++) {
+      const ex = byId('design-pda').make();
+      const fb = ex.check('start: q\nstack: Z\naccept: empty\nq ε Z -> q ε');
+      expect(fb.ok).toBe(false);
+      expect(fb.msg.en).toMatch(/accepts|rejects/);
+    }
+    expect(byId('design-pda').make().check('q0 a Z').errors?.length).toBeGreaterThan(0);
+  });
+
+  it("what's on the stack: the stack in the solution passes, a shorter one does not", () => {
+    for (let k = 0; k < RUNS; k++) {
+      const ex = byId('pda-stack').make();
+      const want = /<b class="mono">([^<]+)<\/b>\)/.exec(ex.solution.en)![1];
+      expect(ex.check(want).ok, ex.prompt.en).toBe(true);
+      expect(ex.check([...want].join(' ')).ok).toBe(true);
+      expect(ex.check(want.slice(1)).ok).toBe(false);
+    }
+  });
+});
+
 describe('quiz', () => {
   it('has well-formed questions with distinct options', () => {
     expect(QUESTIONS.length).toBeGreaterThanOrEqual(25);

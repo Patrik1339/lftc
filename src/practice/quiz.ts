@@ -225,4 +225,63 @@ export const QUESTIONS: Question[] = [
     options: [l('Prin niveluri de precedență: E → E+T | T, T → T*F | F, F → a', 'With precedence levels: E → E+T | T, T → T*F | F, F → a'), l('Prin trecere în FNC', 'By converting to CNF'), l('Eliminând recursivitatea stângă', 'By removing left recursion'), l('Nu se poate', 'It cannot be done')],
     explain: l('Fiecare nivel corespunde unei priorități, iar recursivitatea la stânga impune asociativitatea la stânga.', 'Each level is one precedence, and left recursion enforces left associativity.'),
   },
+  // ---------------------------------------------------------------- pushdown automata
+  {
+    topic: 'pda',
+    q: l('Ce clasă de limbaje acceptă automatele push-down (nedeterministe)?', 'Which class of languages do (nondeterministic) pushdown automata accept?'),
+    options: [l('Limbajele independente de context (tip 2)', 'The context-free languages (type 2)'), l('Limbajele regulate (tip 3)', 'The regular languages (type 3)'), l('Limbajele dependente de context (tip 1)', 'The context-sensitive languages (type 1)'), l('Toate limbajele de tip 0', 'All type 0 languages')],
+    explain: l('GIC → APD prin expandare/potrivire și APD → GIC prin construcția cu triplete [pXq].', 'CFG → PDA by expand/match and PDA → CFG by the triple construction [pXq].'),
+  },
+  {
+    topic: 'pda',
+    q: l('Ce înseamnă (p, AZ) ∈ δ(q, a, Z)?', 'What does (p, AZ) ∈ δ(q, a, Z) mean?'),
+    options: [
+      l('În q, citind a cu Z în vârf, trece în p și pune A peste Z', 'In q, reading a with Z on top, go to p and push A on top of Z'),
+      l('În q, citind a, scoate A și Z din stivă', 'In q, reading a, pop A and Z'),
+      l('În q, citind a cu A în vârf, trece în p și pune Z', 'In q, reading a with A on top, go to p and push Z'),
+      l('În q, citind a, trece în p fără să modifice stiva', 'In q, reading a, go to p without touching the stack'),
+    ],
+    explain: l('Vârful Z este înlocuit cu AZ; primul simbol, A, devine noul vârf.', 'The top Z is replaced by AZ; the first symbol, A, becomes the new top.'),
+  },
+  {
+    topic: 'pda',
+    q: l('Care este configurația după mișcarea (q0, abb, AZ) ⊢ … cu δ(q0, a, A) = {(q0, AA)}?', 'What is the configuration after the move (q0, abb, AZ) ⊢ … with δ(q0, a, A) = {(q0, AA)}?'),
+    options: [same('(q0, bb, AAZ)'), same('(q0, abb, AAZ)'), same('(q0, bb, AZ)'), same('(q0, bb, AAAZ)')],
+    explain: l('Se consumă a, vârful A este înlocuit cu AA, restul stivei (Z) rămâne.', 'a is consumed, the top A is replaced by AA, the rest of the stack (Z) stays.'),
+  },
+  {
+    topic: 'pda',
+    q: l('Ce relație există între acceptarea prin stări finale și cea prin vidarea stivei?', 'How are acceptance by final state and by empty stack related?'),
+    options: [
+      l('Sunt echivalente: acceptă aceeași clasă de limbaje', 'They are equivalent: they accept the same class of languages'),
+      l('Vidarea stivei acceptă strict mai multe limbaje', 'Empty stack accepts strictly more languages'),
+      l('Stările finale acceptă strict mai multe limbaje', 'Final state accepts strictly more languages'),
+      l('Un APD dat acceptă mereu același limbaj în ambele moduri', 'A given PDA always accepts the same language both ways'),
+    ],
+    explain: l('Pentru orice APD de un tip se construiește un alt APD de celălalt tip; același automat poate însă accepta limbaje diferite în cele două moduri.', 'Any PDA of one kind can be turned into another PDA of the other kind; the same automaton can, however, accept different languages in the two modes.'),
+  },
+  {
+    topic: 'pda',
+    q: l('Care limbaj NU poate fi acceptat de un automat push-down?', 'Which language can NOT be accepted by a pushdown automaton?'),
+    options: [same('{ aⁿbⁿcⁿ | n ≥ 0 }'), same('{ aⁿbⁿ | n ≥ 0 }'), same('{ w wᴿ | w ∈ {a,b}* }'), l('parantezele echilibrate', 'balanced parentheses')],
+    explain: l('aⁿbⁿcⁿ nu este independent de context: o stivă poate compara doar două numărători.', 'aⁿbⁿcⁿ is not context-free: a stack can only compare two counts.'),
+  },
+  {
+    topic: 'pda',
+    q: l('Care limbaj este acceptat de un APD, dar NU de un APD determinist?', 'Which language is accepted by a PDA but NOT by a deterministic PDA?'),
+    options: [same('{ w wᴿ | w ∈ {a,b}* }'), same('{ w c wᴿ | w ∈ {a,b}* }'), same('{ aⁿbⁿ | n ≥ 1 }'), l('orice limbaj regulat', 'any regular language')],
+    explain: l('Fără marcaj la mijloc, automatul trebuie să ghicească unde începe wᴿ — nedeterminism care nu poate fi eliminat.', 'Without a middle marker the automaton has to guess where wᴿ starts — nondeterminism that cannot be removed.'),
+  },
+  {
+    topic: 'pda',
+    q: l('În construcția GIC → APD (o singură stare, stivă vidă), ce face o producție A → α?', 'In the CFG → PDA construction (one state, empty stack), what does a production A → α give?'),
+    options: [same('δ(q, ε, A) ∋ (q, α)'), same('δ(q, A, ε) ∋ (q, α)'), same('δ(q, α, A) ∋ (q, ε)'), same('δ(q, ε, α) ∋ (q, A)')],
+    explain: l('Expandare: A din vârf este înlocuit cu α fără să se citească nimic; terminalele se potrivesc apoi cu δ(q, a, a) = {(q, ε)}.', 'Expand: A on top is replaced by α without reading anything; terminals are then matched by δ(q, a, a) = {(q, ε)}.'),
+  },
+  {
+    topic: 'pda',
+    q: l('Când este blocat un APD în configurația (q, w, ε)?', 'When is a PDA stuck in the configuration (q, w, ε)?'),
+    options: [l('Întotdeauna: nicio mișcare nu se poate face cu stiva vidă', 'Always: no move is possible with an empty stack'), l('Doar dacă w ≠ ε', 'Only if w ≠ ε'), l('Doar dacă q nu este finală', 'Only if q is not final'), l('Niciodată, poate face ε-mișcări', 'Never, it can make ε-moves')],
+    explain: l('Orice mișcare citește vârful stivei, așa că fără vârf nu există mișcări. Cu w = ε și acceptare prin stivă vidă, cuvântul este acceptat.', 'Every move reads the top of the stack, so without a top there are no moves. With w = ε and empty-stack acceptance, the word is accepted.'),
+  },
 ];

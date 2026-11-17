@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { DFA_EXAMPLES, EPSILON_EXAMPLES, NFA_EXAMPLES } from './automata/examples';
 import { AMB_EXAMPLES, CFG_EXAMPLES, CHOMSKY_EXAMPLES, LR_EXAMPLES } from './grammar/examples';
 import { useI18n } from './i18n';
+import { PDA_EXAMPLES } from './pda/examples';
 import type { PageId } from './pages/common';
 import { AmbiguityPage } from './pages/Ambiguity';
 import { BnfPage } from './pages/Bnf';
@@ -12,16 +13,17 @@ import { LeftRecPage } from './pages/LeftRec';
 import { MinimizePage } from './pages/Minimize';
 import { NormalFormsPage } from './pages/Normal';
 import { NfaToDfaPage } from './pages/NfaToDfa';
+import { PdaPage } from './pages/Pda';
 import { PracticePage } from './pages/Practice';
 import { PumpingPage } from './pages/Pumping';
 
-const PAGES: PageId[] = ['home', 'chomsky', 'bnf', 'epsilon', 'nfa', 'min', 'pump', 'cfg', 'lr', 'amb', 'practice'];
+const PAGES: PageId[] = ['home', 'chomsky', 'bnf', 'epsilon', 'nfa', 'min', 'pump', 'cfg', 'lr', 'amb', 'pda', 'practice'];
 const pageFromHash = (): PageId => {
   const h = window.location.hash.slice(1) as PageId;
   return PAGES.includes(h) ? h : 'home';
 };
 
-type Texts = Record<'chomsky' | 'epsilon' | 'nfa' | 'min' | 'cfg' | 'lr' | 'amb', string>;
+type Texts = Record<'chomsky' | 'epsilon' | 'nfa' | 'min' | 'cfg' | 'lr' | 'amb' | 'pda', string>;
 
 export function App() {
   const { t, lang, setLang } = useI18n();
@@ -34,6 +36,7 @@ export function App() {
     cfg: CFG_EXAMPLES[0].text,
     lr: LR_EXAMPLES[0].text,
     amb: AMB_EXAMPLES[0].text,
+    pda: PDA_EXAMPLES[0].text,
   });
 
   useEffect(() => {
@@ -94,6 +97,7 @@ export function App() {
         {page === 'lr' && <LeftRecPage text={texts.lr} setText={setText('lr')} goTo={goTo} />}
         {page === 'practice' && <PracticePage goTo={goTo} />}
         {page === 'amb' && <AmbiguityPage text={texts.amb} setText={setText('amb')} goTo={goTo} />}
+        {page === 'pda' && <PdaPage text={texts.pda} setText={setText('pda')} goTo={goTo} />}
       </main>
     </>
   );

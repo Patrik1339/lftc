@@ -43,7 +43,7 @@ export const en = {
   'pr.open': 'See it step by step on “{page}”',
   'home.badge': 'Interactive study aid',
   'home.groupGrammar': 'Grammars',
-  'home.groupGrammarDesc': 'Classification, notations, normal forms and ambiguity of context-free grammars.',
+  'home.groupGrammarDesc': 'Classification, notations, normal forms and ambiguity of context-free grammars, and the pushdown automata that accept them.',
   'home.groupAutomata': 'Finite automata & regular languages',
   'home.groupAutomataDesc': 'From NFA-ε to the minimal DFA, and proving that a language is not regular.',
   'home.open': 'Open',
@@ -630,6 +630,74 @@ E ⇒ <u>E</u>*E ⇒ <u>E</u>+E*E ⇒ a+<u>E</u>*E ⇒ a+a*<u>E</u> ⇒ a+a*a   
 <li>Every EBNF rule is turned into BNF by introducing new nonterminals (table below).</li>
 <li>Syntax diagrams (railroad diagrams) draw the same EBNF rules as graphs.</li>
 <li>Context conditions (a variable must be declared, types must match) cannot be written in BNF; they are checked later, by semantic analysis.</li>
+</ul>`,
+  // Pushdown automata
+  'nav.pda': 'Pushdown automata',
+  'home.pda': 'Run a pushdown automaton on any word: configurations, the stack at every move, acceptance by final state or empty stack, and the CFG → PDA construction.',
+  'ex.pda.anbn': 'aⁿbⁿ (final state)',
+  'ex.pda.wcw': 'w c wᴿ (deterministic, empty stack)',
+  'ex.pda.wwr': 'w wᴿ (nondeterministic)',
+  'ex.pda.paren': 'Balanced parentheses',
+  'ex.pda.equal': 'As many a as b',
+  'ex.pda.cfg': 'From the grammar S → aSb | ε',
+  'pda.editor.title': 'Pushdown automaton',
+  'pda.editor.help': 'Format: <code>start: q0</code>, <code>stack: Z</code> (initial stack symbol), <code>final: q2</code> or <code>accept: empty</code>, then one line per transition: <code>q0 a Z -> q0 AZ</code> (state, input, top → state, pushed string; the leftmost symbol becomes the new top). <code>ε</code> reads nothing or pushes nothing; <code>|</code> separates alternatives. The notation <code>δ(q0, a, Z) = {(q0, AZ)}</code> is accepted too.',
+  'pda.parse.oneStack': 'exactly one initial stack symbol is required',
+  'pda.parse.badMode': 'acceptance is "final" or "empty"',
+  'pda.parse.unknownHeader': 'unknown header "{name}" (use start:, stack:, final: or accept:)',
+  'pda.parse.badTransition': 'a transition is written as: state input top -> state push',
+  'pda.parse.epsTop': 'every move reads (and replaces) the top of the stack, so the top cannot be ε',
+  'pda.parse.empty': 'the automaton has no transitions',
+  'pda.parse.noStack': 'missing "stack: Z" line (the initial stack symbol)',
+  'pda.word': 'Word to run',
+  'pda.mode.final': 'accepts by final state',
+  'pda.mode.empty': 'accepts by empty stack',
+  'pda.det': 'deterministic',
+  'pda.nondet': 'nondeterministic',
+  'pda.tape': 'Input',
+  'pda.stack': 'Stack (top first)',
+  'pda.stack.empty': 'empty',
+  'pda.diagram': 'State diagram — edges labelled "input, top / pushed"',
+  'pda.accepted': '✓ <b>{w}</b> is accepted: an accepting computation with {n} moves is shown below (the shortest one).',
+  'pda.rejected': '✗ <b>{w}</b> is rejected: no computation accepts it ({n} configurations explored). Below is a computation that reads the longest prefix, <b>{read}</b>, before blocking.',
+  'pda.rejected.limit': '✗ No accepting computation was found for <b>{w}</b> within the search limits ({n} configurations). Below is the computation that reads the longest prefix, <b>{read}</b>.',
+  'pda.initial': 'Initial configuration',
+  'pda.initial.b': 'The automaton is in the start state, nothing has been read, and the stack holds only Z<sub>0</sub>.',
+  'pda.move.read': 'Reads <b>{a}</b> with <b>{Z}</b> on top: pops {Z} and pushes <b>{push}</b>.',
+  'pda.move.eps': 'ε-move (reads nothing) with <b>{Z}</b> on top: pops {Z} and pushes <b>{push}</b>.',
+  'pda.computation': 'Accepting computation (q, remaining input, stack)',
+  'pda.computation.partial': 'Computation up to the point where it blocks',
+  'pda.col.input': 'Remaining input',
+  'pda.col.stack': 'Stack',
+  'pda.col.via': 'Transition used',
+  'pda.limits': 'Nondeterminism is explored breadth-first (all choices in parallel), with the stack limited to 2·|w| + 10 symbols. Click a row to jump to it.',
+  'pda.cfg': 'From a grammar to a pushdown automaton',
+  'pda.cfg.b': 'For G = (N, Σ, S, P) we build a PDA with a single state q and Z<sub>0</sub> = S that accepts L(G) by empty stack: δ(q, ε, A) ∋ (q, α) for every production A → α (<b>expand</b>), and δ(q, a, a) = {(q, ε)} for every terminal a (<b>match</b>). Its computations follow the leftmost derivations of G.',
+  'pda.cfg.result': 'Pushdown automaton',
+  'pda.cfg.load': 'Load into the editor',
+  'theory.pda': `
+<p>A <b>pushdown automaton</b> (PDA) is a finite automaton with an extra memory: a <b>stack</b>. Formally P = (Q, Σ, Γ, δ, q<sub>0</sub>, Z<sub>0</sub>, F), where Γ is the stack alphabet, Z<sub>0</sub> ∈ Γ the initial stack symbol, and</p>
+<p class="formula">δ : Q × (Σ ∪ {ε}) × Γ → finite subsets of Q × Γ*</p>
+<p>(p, γ) ∈ δ(q, a, Z) means: in state q, reading a (or nothing, if a = ε) with Z on top, go to p and replace Z by γ (the first symbol of γ becomes the new top; γ = ε pops Z).</p>
+<p>A <b>configuration</b> is (q, w, α): current state, input not yet read, stack contents (top on the left). One move:</p>
+<p class="formula">(q, aw, Zα) ⊢ (p, w, γα)   if (p, γ) ∈ δ(q, a, Z)</p>
+<h4>Acceptance</h4>
+<ul>
+<li>by <b>final state</b>: L(P) = { w | (q<sub>0</sub>, w, Z<sub>0</sub>) ⊢* (p, ε, α), p ∈ F };</li>
+<li>by <b>empty stack</b>: N(P) = { w | (q<sub>0</sub>, w, Z<sub>0</sub>) ⊢* (p, ε, ε) }.</li>
+</ul>
+<p>The two are equivalent: every language accepted one way is accepted the other way by some other PDA.</p>
+<h4>Example: L = { a<sup>n</sup>b<sup>n</sup> | n ≥ 1 }</h4>
+<div class="example">δ(q0, a, Z) = {(q0, AZ)},&nbsp;&nbsp; δ(q0, a, A) = {(q0, AA)}<br>
+δ(q0, b, A) = {(q1, ε)},&nbsp;&nbsp; δ(q1, b, A) = {(q1, ε)}<br>
+δ(q1, ε, Z) = {(q2, Z)},   F = {q2}<br><br>
+(q0, aabb, Z) ⊢ (q0, abb, AZ) ⊢ (q0, bb, AAZ) ⊢ (q1, b, AZ) ⊢ (q1, ε, Z) ⊢ (q2, ε, Z) ✓</div>
+<h4>Good to know</h4>
+<ul>
+<li>PDAs accept exactly the <b>context-free languages</b> (type 2): CFG → PDA by the expand/match construction (bottom of the page), PDA → CFG by the triple construction [pXq].</li>
+<li>Nondeterminism matters: <b>deterministic</b> PDAs accept a strict subclass (e.g. w c w<sup>R</sup> is deterministic, w w<sup>R</sup> is not). LR parsers are deterministic PDAs.</li>
+<li>Every move pops the top; to "leave the stack alone" push it back (Z → Z), to push X on top write XZ.</li>
+<li>{a<sup>n</sup>b<sup>n</sup>c<sup>n</sup>} is not context-free: one stack cannot compare three counts.</li>
 </ul>`,
 };
 
